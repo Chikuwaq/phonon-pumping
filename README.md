@@ -18,7 +18,7 @@ make
 
 On Windows, 
 1. install `cmake`
-2. download a zip of [MinGW binaries](https://github.com/niXman/mingw-builds-binaries/releases), extract them and move the folder `mingw64` under `C:\Program Files (x86)`. Add `C:\Program Files (x86)\mingw64\bin` to PATH.
+2. download a zip containing the keyword `uvcrt` from [MinGW binaries](https://github.com/niXman/mingw-builds-binaries/releases), extract them and move the folder `mingw64` under `C:\Program Files (x86)`. Add `C:\Program Files (x86)\mingw64\bin` to PATH.
 In the project root folder, run:
 ```sh
 mkdir build
@@ -26,14 +26,19 @@ cd build
 cmake -S .. -B . -G "MinGW Makefiles"
 mingw32-make
 ```
-NOTE: The executable might require the dynamic libraries `mingw64\bin\libstdc++-6.dll` and `libgcc_s_seh-1.dll` to be present in the same directory. In that case, simply copy-paste the dlls.
+
+The executable will be saved under `build/bin/`.
+
+NOTE: On Windows, the executable might require the dynamic libraries `mingw64\bin\libstdc++-6.dll` and `libgcc_s_seh-1.dll` to be present in the same directory. In that case, simply copy-paste the dlls.
+
 
 ## Usage
 The material parameters are specified in a material parameter file. The layer thicknesses, magnetization angle, ac magnetic field strengths, and the ranges of static magnetic field and frequency are specified in a geometry file. You need to tell the program where these two files are.
 
 1. Prepare material parameter file
 2. Prepare geometry file
-3. Run the program specifying the paths to those two files:
+3. Run the program in Command Prompt/PowerShell (Windows) or Terminal (Linux/Mac), specifying the paths to those two files:
+
 (Linux, Mac)
 ```sh
 ./PhononPumpingPlotter -m path/to/material_parameter_file -g path/to/geometry_file
@@ -43,6 +48,7 @@ The material parameters are specified in a material parameter file. The layer th
 .\PhononPumpingPlotter.exe -m path\to\material_parameter_file -g path\to\geometry_file
 ```
 If the two input files are in the same directory as the executable, this simplifies to:
+
 (Windows)
 ```sh
 .\PhononPumpingPlotter.exe -m .\material_parameters.txt -g .\geometry.txt
