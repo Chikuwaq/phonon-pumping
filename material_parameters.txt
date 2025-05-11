@@ -1,0 +1,18 @@
+mag_rho_kgm3 = 8.8e3
+mag_ct_ms = 1900 # to be verified
+mag_cl_ms = 2000 # not relevant for perpendicular magnetization
+mag_eta_Hz = 1e9 # will be multiplied by 2pi
+
+nonmag_rho_kgm3 = 2.145e4
+nonmag_ct_ms = 1680 # to be verified
+nonmag_cl_ms = 2000 # not relevant for perpendicular magnetization
+nonmag_eta_Hz = 1e10 # will be multiplied by 2pi
+
+# magnetic properties
+K1_Jm3 = 0.513e6
+Ms_Jm3 = 1400e3
+Gilbert_damping = 5.8e-3
+
+# magnetoelastic properties
+b1_Jm3 = -8.1e6  # temporarily using B1 of hexiagonal crystal
+b2_Jm3 = 37.4e6

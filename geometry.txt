@@ -1,0 +1,17 @@
+# geometry
+mag_thickness_nm = 36.1
+nonmag_thickness_nm = 21.32
+theta = 0.        # external static magnetic field is assumed sufficiently strong that the magnetization aligns with the field
+
+h_static = 0.
+# ac microwave intensity
+hpara2 = 2.
+hperp2 = 2.
+
+# sweep range
+min_B_Tesla = 1.3
+max_B_Tesla = 2.6
+n_B = 100
+min_freq_GHz = 10.
+max_freq_GHz = 50.
+n_freq = 100

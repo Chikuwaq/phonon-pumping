@@ -1,1 +1,3 @@
 build/**
+plot_spectrum.plt
+spectrum.dat

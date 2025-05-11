@@ -1,4 +1,7 @@
+#include <filesystem>
+
 #include "constants.h"
+#include "parser.h"
 
 namespace phonon_pumping {
 
@@ -24,25 +27,31 @@ namespace phonon_pumping {
         double b1_Jm3;
         double b2_Jm3;
 
-        void set() {
-            mag_rho_kgm3 = 8.8e3;
-            mag_ct_ms = 1900.0; // to be verified
-            mag_cl_ms = 2000.0; // not relevant for perpendicular magnetization
-            mag_eta_Hz = 2.0 * constants::PI * 1e9;
-        
-            nonmag_rho_kgm3 = 2.145e4;
-            nonmag_ct_ms = 1680.0; // to be verified
-            nonmag_cl_ms = 2000.0; // not relevant for perpendicular magnetization
-            nonmag_eta_Hz = 2.0 * constants::PI * 1e10;
-        
-            // magnetic properties
-            K1_Jm3 = 0.513e6;
-            Ms_Jm3 = 1400e3;
-            Gilbert_damping = 5.8e-3;
-        
-            // magnetoelastic properties
-            b1_Jm3 = -8.1e6;  // temporarily using B1 of hexiagonal crystal
-            b2_Jm3 = 37.4e6;
+        void set(const std::filesystem::path& filepath) {
+            std::cout << "\nReading material parameter file..." << std::endl;
+
+            auto result = parse_file(filepath);
+
+            for (const auto& [key, value] : result) {
+                std::cout << key << " = " << value << std::endl;
+            }
+
+            mag_rho_kgm3 = result["mag_rho_kgm3"];
+            mag_ct_ms = result["mag_ct_ms"];
+            mag_cl_ms = result["mag_cl_ms"];
+            mag_eta_Hz = result["mag_eta_Hz"];
+
+            nonmag_rho_kgm3 = result["nonmag_rho_kgm3"];
+            nonmag_ct_ms = result["nonmag_ct_ms"];
+            nonmag_cl_ms = result["nonmag_cl_ms"];
+            nonmag_eta_Hz = result["nonmag_eta_Hz"];
+
+            K1_Jm3 = result["K1_Jm3"];
+            Ms_Jm3 = result["Ms_Jm3"];
+            Gilbert_damping = result["Gilbert_damping"];
+
+            b1_Jm3 = result["b1_Jm3"];
+            b2_Jm3 = result["b2_Jm3"];
         };
 
         double mag_kappat() const { // in general depends on freq_Hz, but approximately constant in the GHz range
