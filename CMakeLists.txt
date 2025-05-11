@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+#add_compile_options(-g)
+
 # Optional: Explicitly set architecture to arm64 (Apple Silicon)
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "" FORCE)
