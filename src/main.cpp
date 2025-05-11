@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <filesystem>
+#include <cmath>
 
 // uncomment to disable assert()
 // #define NDEBUG
@@ -35,7 +36,7 @@ void calculate(const MaterialParameters& material, const Geometry& geometry, Mat
     Vector<double> phi; phi.zeros(geometry.n_freq);
     Vector<double> xi; xi.zeros(geometry.n_freq);
     for (size_t i_freq = 0; i_freq < geometry.n_freq; i_freq++) {
-        omega_Hz(i_freq) = 2. * M_PI * geometry.freq_GHz(i_freq) / constants::SCALE_TO_GIGA;
+        omega_Hz(i_freq) = 2. * constants::PI * geometry.freq_GHz(i_freq) / constants::SCALE_TO_GIGA;
         phi(i_freq) = omega_Hz(i_freq) * (geometry.mag_thickness_nm / constants::SCALE_TO_NANO) / material.mag_ct_ms; // dimensionless
         xi(i_freq) = omega_Hz(i_freq) * (geometry.nonmag_thickness_nm / constants::SCALE_TO_NANO) / material.nonmag_ct_ms; // dimensionless
     }

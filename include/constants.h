@@ -1,8 +1,7 @@
 #pragma once
-#include <math.h>
 
 namespace constants {
-    constexpr double PI = M_PI;
+    constexpr double PI = 3.141592653589;
 
     constexpr double MU0 = 4.0 * PI * 1e-7;  // [N A^(-2)] permeability in vacuum
     constexpr double GAMMA = 2.0 * PI * 28.5e9;  // [rad.Hz/T] [An2020] electron gyromagnetic ratio
