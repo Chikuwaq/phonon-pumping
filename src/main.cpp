@@ -108,14 +108,14 @@ void calculate(const MaterialParameters& material, const Geometry& geometry, Mat
             const double Delta_real = Omega_real(0, i_freq, i_B) * Omega_real(1, i_freq, i_B) - Omega_imag(0, i_freq, i_B) * Omega_imag(1, i_freq, i_B) - pow(omega_Hz(i_freq), 2);
             const double Delta_imag = Omega_real(0, i_freq, i_B) * Omega_imag(1, i_freq, i_B) + Omega_imag(0, i_freq, i_B) * Omega_real(1, i_freq, i_B);
             const double Delta_squared = pow(Delta_real, 2) + pow(Delta_imag, 2);
-            chi_tot_real(0, 0) = constants::GAMMA * constants::MU0 * (Omega_real(0, i_freq, i_B)*Delta_real + Omega_imag(0, i_freq, i_B) * Delta_imag) / Delta_squared;
-            chi_tot_imag(0, 0) = constants::GAMMA * constants::MU0 * (-Omega_real(0, i_freq, i_B)*Delta_imag + Omega_imag(0, i_freq, i_B) * Delta_real) / Delta_squared;
+            chi_tot_real(0, 0) = constants::GAMMA * constants::MU0 * (Omega_real(0, i_freq, i_B) * Delta_real + Omega_imag(0, i_freq, i_B) * Delta_imag) / Delta_squared;
+            chi_tot_imag(0, 0) = constants::GAMMA * constants::MU0 * (-Omega_real(0, i_freq, i_B) * Delta_imag + Omega_imag(0, i_freq, i_B) * Delta_real) / Delta_squared;
             chi_tot_real(0, 1) = constants::GAMMA * constants::MU0 * (-omega_Hz(i_freq)*Delta_imag) / Delta_squared;
             chi_tot_imag(0, 1) = constants::GAMMA * constants::MU0 * (-omega_Hz(i_freq)*Delta_real) / Delta_squared;
             chi_tot_real(1, 0) = -chi_tot_real(0, 1);
             chi_tot_imag(1, 0) = -chi_tot_imag(0, 1);
-            chi_tot_real(1, 1) = constants::GAMMA * constants::MU0 * (Omega_real(1, i_freq, i_B)*Delta_real + Omega_imag(1, i_freq, i_B) * Delta_imag) / Delta_squared;
-            chi_tot_imag(1, 1) = constants::GAMMA * constants::MU0 * (-Omega_real(1, i_freq, i_B)*Delta_imag + Omega_imag(1, i_freq, i_B) * Delta_real) / Delta_squared;
+            chi_tot_real(1, 1) = constants::GAMMA * constants::MU0 * (Omega_real(1, i_freq, i_B) * Delta_real + Omega_imag(1, i_freq, i_B) * Delta_imag) / Delta_squared;
+            chi_tot_imag(1, 1) = constants::GAMMA * constants::MU0 * (-Omega_real(1, i_freq, i_B) * Delta_imag + Omega_imag(1, i_freq, i_B) * Delta_real) / Delta_squared;
 
             FMR_power_absorption(i_B, i_freq) = chi_tot_imag(0, 0) * geometry.hpara2 * (geometry.hpara2 + geometry.h_static) + chi_tot_imag(1, 1) * geometry.hperp2 * geometry.hperp2 - chi_tot_imag(0, 1) * geometry.hperp2 * geometry.h_static;
         }

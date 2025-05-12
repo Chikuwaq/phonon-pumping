@@ -39,12 +39,12 @@ namespace phonon_pumping {
             mag_rho_kgm3 = result["mag_rho_kgm3"];
             mag_ct_ms = result["mag_ct_ms"];
             mag_cl_ms = result["mag_cl_ms"];
-            mag_eta_Hz = result["mag_eta_Hz"];
+            mag_eta_Hz = 2.0 * constants::PI * result["mag_eta_Hz"];
 
             nonmag_rho_kgm3 = result["nonmag_rho_kgm3"];
             nonmag_ct_ms = result["nonmag_ct_ms"];
             nonmag_cl_ms = result["nonmag_cl_ms"];
-            nonmag_eta_Hz = result["nonmag_eta_Hz"];
+            nonmag_eta_Hz = 2.0 * constants::PI * result["nonmag_eta_Hz"];
 
             K1_Jm3 = result["K1_Jm3"];
             Ms_Jm3 = result["Ms_Jm3"];
