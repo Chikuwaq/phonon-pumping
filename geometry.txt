@@ -11,7 +11,7 @@ hperp2 = 2.
 # sweep range
 min_B_Tesla = 1.3
 max_B_Tesla = 2.6
-n_B = 100
+n_B = 300
 min_freq_GHz = 10.
 max_freq_GHz = 50.
-n_freq = 100
+n_freq = 300

@@ -155,7 +155,11 @@ void write_gnuplot_script(const Geometry& geometry) {
         throw std::runtime_error("Could not open output file!");
     }
 
+    #if defined(__APPLE__)
     file << "set term pdfcairo enhanced color font 'Helvetica,18' size 5in,3in" << std::endl;
+    #else
+    file << "set term pdfcairo enhanced color font 'sans,18' size 5in,3in" << std::endl;
+    #endif
     file << "set output 'FMR_MagThickness" << geometry.mag_thickness_nm << "_NonmagThickness" << geometry.nonmag_thickness_nm << ".pdf' " << std::endl;
     file << "set lmargin screen 0.20" << std::endl;
     file << "set rmargin screen 0.80" << std::endl;
