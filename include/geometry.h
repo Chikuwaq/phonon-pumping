@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <stdexcept>
 #include <iostream>
+#include <array>
 
 #include "vector.h"
 #include "parser.h"
@@ -8,16 +9,22 @@
 
 namespace phonon_pumping {
 
+    enum Enhance_mechanism {
+        STRESS_MATCHING_TA_NeumannNeumann,
+        STRESS_MATCHING_LA_NeumannNeumann,
+        STRESS_MATCHING_TA_DirichletNeumann,
+        NUM_ELEMENTS
+    };
+
     struct Geometry {
         private:
         static uint16_t expect_uint(const double value);
-        static std::tuple<uint16_t, uint16_t> get_index_range(std::map<std::string, double>& parsed_input, const std::string& key);
-
+        
         public:
         // geometry
         double mag_thickness_nm;
         double nonmag_thickness_nm;
-        double theta;
+        double magnetization_angle_radian;
 
         double h_static;
         // ac microwave intensity
@@ -36,8 +43,8 @@ namespace phonon_pumping {
         Vector<double> B_Tesla;
         Vector<double> freq_GHz;
 
-        // label-value pairs of requested output
-        std::vector<std::pair<std::string, double>> horizontal_lines;
+        // label-value pairs of frequency line output
+        std::array<std::vector<std::pair<std::string, double>>, Enhance_mechanism::NUM_ELEMENTS> horizontal_lines;
 
         void load(const std::filesystem::path& filepath, const MaterialParameters& material);
 

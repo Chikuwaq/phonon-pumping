@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include <cmath>
 
 #include "constants.h"
 #include "parser.h"
@@ -68,15 +69,26 @@ namespace phonon_pumping {
             return constants::GAMMA * magnetic_field;
         }
 
+        inline double omega11_no_MEC_no_Gilbert_damping(const double magnetic_field, const double magnetization_angle_radian) const {
+            return omegaH(magnetic_field) - (omegaM() - omegaK()) * pow(cos(magnetization_angle_radian), 2);
+        }
+
+        inline double omega22_no_MEC_no_Gilbert_damping(const double magnetic_field, const double magnetization_angle_radian) const {
+            return omegaH(magnetic_field) - (omegaM() - omegaK()) * cos(2.0 * magnetization_angle_radian);
+        }
+
         inline double stress_matching_freq_TA_both_Neumann_GHz(const double mag_thickness_m, const uint16_t mode) const {
+            if (mode == 0) throw std::runtime_error("Mode index must be positive!");
             return constants::SCALE_TO_GIGA * mag_ct_ms * (2. * mode - 1.) / 2. / mag_thickness_m;
         }
 
         inline double stress_matching_freq_LA_both_Neumann_GHz(const double mag_thickness_m, const uint16_t mode) const {
+            if (mode == 0) throw std::runtime_error("Mode index must be positive!");
             return constants::SCALE_TO_GIGA * mag_cl_ms * (2. * mode - 1.) / 2. / mag_thickness_m;
         }
 
         inline double stress_matching_freq_TA_Dirichlet_Neumann_GHz(const double mag_thickness_m, const uint16_t mode) const {
+            if (mode == 0) throw std::runtime_error("Mode index must be positive!");
             return constants::SCALE_TO_GIGA * mag_ct_ms * (2. * mode - 1.) / 4. / mag_thickness_m;
         }
     };

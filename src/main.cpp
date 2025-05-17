@@ -29,7 +29,7 @@ void calculate(const MaterialParameters& material, const Geometry& geometry, Mat
     for (size_t i_B = 0; i_B < geometry.n_B; i_B++) {
         const double omH = material.omegaH(geometry.B_Tesla(i_B));
         const double omKMinusM = material.omegaK() - material.omegaM();
-        omega_theta_Hz(i_B) = sqrt(pow(omH, 2) + pow(omKMinusM, 2) * cos(2 * geometry.theta) + (3. * pow(cos(geometry.theta), 2) - 1.) * omH * omKMinusM);
+        omega_theta_Hz(i_B) = sqrt(pow(omH, 2) + pow(omKMinusM, 2) * cos(2 * geometry.magnetization_angle_radian) + (3. * pow(cos(geometry.magnetization_angle_radian), 2) - 1.) * omH * omKMinusM);
     }
 
     Vector<double> omega_Hz; omega_Hz.zeros(geometry.n_freq);
@@ -100,10 +100,10 @@ void calculate(const MaterialParameters& material, const Geometry& geometry, Mat
             const double omH = material.omegaH(geometry.B_Tesla(i_B));
             const double omK = material.omegaK();
             const double omM = material.omegaM();
-            Omega_real(0, i_freq, i_B) = omH + (omK-omM-g_real(i_freq)) * pow(cos(geometry.theta), 2);
-            Omega_imag(0, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - g_imag(i_freq) * pow(cos(geometry.theta), 2);
-            Omega_real(1, i_freq, i_B) = omH + (omK-omM) * cos(2. * geometry.theta) - g_real(i_freq) * pow(cos(2 * geometry.theta), 2) - gl_real(i_freq) * pow(sin(2 * geometry.theta), 2);
-            Omega_imag(1, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - g_imag(i_freq) * pow(cos(2 * geometry.theta), 2) - gl_imag(i_freq) * pow(sin(2 * geometry.theta), 2);
+            Omega_real(0, i_freq, i_B) = omH + (omK-omM-g_real(i_freq)) * pow(cos(geometry.magnetization_angle_radian), 2);
+            Omega_imag(0, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - g_imag(i_freq) * pow(cos(geometry.magnetization_angle_radian), 2);
+            Omega_real(1, i_freq, i_B) = omH + (omK-omM) * cos(2. * geometry.magnetization_angle_radian) - g_real(i_freq) * pow(cos(2 * geometry.magnetization_angle_radian), 2) - gl_real(i_freq) * pow(sin(2 * geometry.magnetization_angle_radian), 2);
+            Omega_imag(1, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - g_imag(i_freq) * pow(cos(2 * geometry.magnetization_angle_radian), 2) - gl_imag(i_freq) * pow(sin(2 * geometry.magnetization_angle_radian), 2);
 
             const double Delta_real = Omega_real(0, i_freq, i_B) * Omega_real(1, i_freq, i_B) - Omega_imag(0, i_freq, i_B) * Omega_imag(1, i_freq, i_B) - pow(omega_Hz(i_freq), 2);
             const double Delta_imag = Omega_real(0, i_freq, i_B) * Omega_imag(1, i_freq, i_B) + Omega_imag(0, i_freq, i_B) * Omega_real(1, i_freq, i_B);
@@ -147,7 +147,22 @@ void output_spectrum(const Vector<double>& x_values, const Vector<double>& y_val
     file.close();
 }
 
-void write_gnuplot_script(const Geometry& geometry) {
+void write_gnuplot_command_draw_horizontal_line(const MaterialParameters& material, const Geometry& geometry, const std::string& color_name, const Enhance_mechanism enhance_mechanism, std::ofstream& file) {
+    // estimate FMR frequency at the middle magnetic field
+    const double middle_B_Tesla = 0.5 * (geometry.min_B_Tesla + geometry.max_B_Tesla);
+    const double FMR_freq_at_middle_B_GHz = 0.5 * (material.omega11_no_MEC_no_Gilbert_damping(middle_B_Tesla, geometry.magnetization_angle_radian) + material.omega22_no_MEC_no_Gilbert_damping(middle_B_Tesla, geometry.magnetization_angle_radian)) * constants::SCALE_TO_GIGA / 2.0 / constants::PI;
+    const double label_position_shifty = 0.05 * (geometry.max_freq_GHz - geometry.min_freq_GHz);
+
+    for (auto& [label, freq_GHz] : geometry.horizontal_lines[enhance_mechanism]) {
+        // prevent the label from overlapping with the FMR peaks
+        const double alpha = (freq_GHz < FMR_freq_at_middle_B_GHz) ? 0.55 : 0.01;
+        const double label_position_x = (1.0 - alpha) * geometry.min_B_Tesla + alpha * geometry.max_B_Tesla;
+        file << "set arrow from " << geometry.min_B_Tesla << "," << freq_GHz << " to " << geometry.max_B_Tesla << "," << freq_GHz << " nohead front lc '" << color_name << "'" << std::endl;
+        file << "set label '" << label << "' " << " at " << label_position_x << ", " << freq_GHz + label_position_shifty << " front font ',12' textcolor rgb '" << color_name << "'" << std::endl;
+    }
+}
+
+void write_gnuplot_script(const MaterialParameters& material, const Geometry& geometry) {
     std::cout << "\nWriting gnuplot script file..." << std::endl;
 
     std::ofstream file(gnuplot_file_name);
@@ -160,6 +175,7 @@ void write_gnuplot_script(const Geometry& geometry) {
     #else
     file << "set term pdfcairo enhanced color font 'sans,18' size 5in,3in" << std::endl;
     #endif
+
     file << "set output 'FMR_MagThickness" << geometry.mag_thickness_nm << "_NonmagThickness" << geometry.nonmag_thickness_nm << ".pdf' " << std::endl;
     file << "set lmargin screen 0.20" << std::endl;
     file << "set rmargin screen 0.80" << std::endl;
@@ -167,21 +183,27 @@ void write_gnuplot_script(const Geometry& geometry) {
     file << "set pm3d map" << std::endl;
     file << "set palette defined ( 0 '#000090',1 '#000fff',2 '#0090ff',3 '#0fffee',4 '#90ff70',5 '#ffee00',6 '#ff7000',7 '#ee0000',8 '#7f0000') # define color gradation. Relative to cbrange" << std::endl;
 
+    file << std::endl;
     file << "set title 'FMR power absorption: Magnet/Nonmagnet " << geometry.mag_thickness_nm << "/" << geometry.nonmag_thickness_nm << " nm'" << std::endl;
 
     file << "set xlabel 'Out-of-plane magnetic field [T]'" << std::endl;
     file << "set ylabel 'Frequency [GHz]'" << std::endl;
+    
+    file << "set xrange [" << geometry.min_B_Tesla << ":" << geometry.max_B_Tesla << "]" << std::endl;
+    file << "set yrange [" << geometry.min_freq_GHz << ":" << geometry.max_freq_GHz << "]" << std::endl;
+
+    write_gnuplot_command_draw_horizontal_line(material, geometry, "yellow", Enhance_mechanism::STRESS_MATCHING_TA_NeumannNeumann, file);
+    write_gnuplot_command_draw_horizontal_line(material, geometry, "olive", Enhance_mechanism::STRESS_MATCHING_LA_NeumannNeumann, file);
+    write_gnuplot_command_draw_horizontal_line(material, geometry, "red", Enhance_mechanism::STRESS_MATCHING_TA_DirichletNeumann, file);
 
     file << "sp '" << spectrum_datafile_name << "' notitle w pm3d" << std::endl;
 
-    for (auto& [label, value] : geometry.horizontal_lines) {
-        file << "p " << value << " title '" << label << "' w line" << std::endl; // TODO: distinguish by colors
-    }
-
+    file << std::endl;
     file << "unset pm3d" << std::endl;
     file << "unset term" << std::endl;
     file << "set output" << std::endl;
 }
+
 
 int main(int argc, char *argv[]) {
 
@@ -230,7 +252,7 @@ int main(int argc, char *argv[]) {
         calculate(material, geometry, FMR_power_absorption);
 
         output_spectrum(geometry.B_Tesla, geometry.freq_GHz, FMR_power_absorption);
-        write_gnuplot_script(geometry);
+        write_gnuplot_script(material, geometry);
 
     } catch (const std::exception& e) {
         std::cout << "ERROR: " << e.what() << std::endl;
