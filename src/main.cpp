@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
         material.set(path_material_parameter);
 
         Geometry geometry;
-        geometry.read(path_geometry);
+        geometry.load(path_geometry);
 
         // --- compute FMR absorption spectrum
         geometry.setup_grids();

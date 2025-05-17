@@ -18,7 +18,10 @@ if(APPLE AND CMAKE_SYSTEM_PROCESSOR MATCHES "arm64")
     add_compile_options(-mstrict-align -ftree-vectorize)
 endif()
 
-add_executable(PhononPumpingPlotter src/main.cpp)
+file(GLOB SOURCES "src/*.cpp")
+add_executable(PhononPumpingPlotter ${SOURCES})
+target_include_directories(PhononPumpingPlotter PUBLIC include)
+
 set_target_properties(PhononPumpingPlotter PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
