@@ -1,7 +1,7 @@
 # Phonon-pumping in magnetic|nonmagnetic bilayers
 This program generates data file and gnuplot script that generate FMR power absorption spectra.
 
-## Compilation
+## How to compile executable
 Build depends on 
 * `cmake`
 * some `make` tool
@@ -32,7 +32,7 @@ The executable will be saved under `build/bin/`.
 NOTE: On Windows, the executable might require the dynamic libraries `mingw64\bin\libstdc++-6.dll` and `libgcc_s_seh-1.dll` to be present in the same directory. In that case, simply copy-paste the dlls.
 
 
-## Usage
+## How to use
 The material parameters are specified in a material parameter file. The layer thicknesses, magnetization angle, ac magnetic field strengths, and the ranges of static magnetic field and frequency are specified in a geometry file. You need to tell the program where these two files are.
 
 1. Prepare material parameter file
