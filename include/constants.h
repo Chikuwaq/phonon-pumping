@@ -8,3 +8,16 @@ namespace constants {
     constexpr double SCALE_TO_GIGA = 1e-9;
     constexpr double SCALE_TO_NANO = 1e9;
 };
+
+namespace phonon_pumping {
+
+    enum enhance_mechanism {
+        STRESS_MATCHING_TA_NeumannNeumann,
+        STRESS_MATCHING_LA_NeumannNeumann,
+        STRESS_MATCHING_TA_DirichletNeumann,
+        NUM_ELEMENTS
+    };
+
+};
+
+typedef std::array<std::vector<std::pair<std::string, double>>, phonon_pumping::enhance_mechanism::NUM_ELEMENTS> list_of_frequencies;

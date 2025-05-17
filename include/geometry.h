@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdio>
 #include <stdexcept>
 #include <iostream>
@@ -8,13 +10,6 @@
 #include "materialparameters.h"
 
 namespace phonon_pumping {
-
-    enum Enhance_mechanism {
-        STRESS_MATCHING_TA_NeumannNeumann,
-        STRESS_MATCHING_LA_NeumannNeumann,
-        STRESS_MATCHING_TA_DirichletNeumann,
-        NUM_ELEMENTS
-    };
 
     struct Geometry {
         private:
@@ -43,11 +38,10 @@ namespace phonon_pumping {
         Vector<double> B_Tesla;
         Vector<double> freq_GHz;
 
-        // label-value pairs of frequency line output
-        std::array<std::vector<std::pair<std::string, double>>, Enhance_mechanism::NUM_ELEMENTS> horizontal_lines;
+        std::array<bool, enhance_mechanism::NUM_ELEMENTS> should_draw_frequencies;
 
-        void load(const std::filesystem::path& filepath, const MaterialParameters& material);
-
+        public:
+        void load(const std::filesystem::path& filepath);
         void setup_grids();
     };
 

@@ -10,7 +10,7 @@ uint16_t phonon_pumping::Geometry::expect_uint(const double value) {
 	return static_cast<uint16_t>(std::floor(value));
 }
 
-void phonon_pumping::Geometry::load(const std::filesystem::path& filepath, const MaterialParameters& material) {
+void phonon_pumping::Geometry::load(const std::filesystem::path& filepath) {
 	std::cout << "\nReading geometry file..." << std::endl;
 
 	auto parsed_input = parse_file(filepath);
@@ -42,43 +42,17 @@ void phonon_pumping::Geometry::load(const std::filesystem::path& filepath, const
 
 	// calculate resonant frequencies in the output frequency range and store with their labels
 	// for horizontal line outputs
-	if (parsed_input.find("stress_matching_freq_TA_both_Neumann") != parsed_input.end()) {
-		if (parsed_input["stress_matching_freq_TA_both_Neumann"] > 0) {
-			std::cout << "Searching frequencies at which the TA mode profile (Neumann boundary condition on both sides) is in phase with the interface magnetoelastic stress ..." << std::endl;
-			for (uint16_t i = 1; i <= std::numeric_limits<uint16_t>::max(); i++) {
-				const double resonance_freq_GHz = material.stress_matching_freq_TA_both_Neumann_GHz(mag_thickness_nm / constants::SCALE_TO_NANO, i);
-				if (resonance_freq_GHz < min_freq_GHz) continue;
-				if (max_freq_GHz < resonance_freq_GHz) break;
-
-				horizontal_lines[Enhance_mechanism::STRESS_MATCHING_TA_NeumannNeumann].emplace_back("n_t=" + std::to_string(i) + " (Neumann-Neumann)", resonance_freq_GHz);
-			}
-		}
+	for (bool& should_draw : should_draw_frequencies) {
+		should_draw = false;
 	}
-
-	if (parsed_input.find("stress_matching_freq_LA_both_Neumann") != parsed_input.end()) {
-		if (parsed_input["stress_matching_freq_LA_both_Neumann"] > 0) {
-			std::cout << "Searching frequencies at which the LA mode profile (Neumann boundary condition on both sides) is in phase with the interface magnetoelastic stress ..." << std::endl;
-			for (uint16_t i = 1; i <= std::numeric_limits<uint16_t>::max(); i++) {
-				const double resonance_freq_GHz = material.stress_matching_freq_LA_both_Neumann_GHz(mag_thickness_nm / constants::SCALE_TO_NANO, i);
-				if (resonance_freq_GHz < min_freq_GHz) continue;
-				if (max_freq_GHz < resonance_freq_GHz) break;
-
-				horizontal_lines[Enhance_mechanism::STRESS_MATCHING_LA_NeumannNeumann].emplace_back("n_l=" + std::to_string(i) + " (Neumann-Neumann)", resonance_freq_GHz);
-			}
-		}
+	if ((parsed_input.find("stress_matching_freq_TA_both_Neumann") != parsed_input.end())) {
+		should_draw_frequencies[enhance_mechanism::STRESS_MATCHING_TA_NeumannNeumann] = (parsed_input["stress_matching_freq_TA_both_Neumann"] > 0);
 	}
-
-	if (parsed_input.find("stress_matching_freq_TA_Dirichlet_Neumann") != parsed_input.end()) {
-		if (parsed_input["stress_matching_freq_TA_Dirichlet_Neumann"] > 0) {
-			std::cout << "Searching frequencies at which the TA mode profile (Dirichlet and Neumann boundary conditions on each side) is in phase with the interface magnetoelastic stress ..." << std::endl;
-			for (uint16_t i = 1; i <= std::numeric_limits<uint16_t>::max(); i++) {
-				const double resonance_freq_GHz = material.stress_matching_freq_TA_Dirichlet_Neumann_GHz(mag_thickness_nm / constants::SCALE_TO_NANO, i);
-				if (resonance_freq_GHz < min_freq_GHz) continue;
-				if (max_freq_GHz < resonance_freq_GHz) break;
-
-				horizontal_lines[Enhance_mechanism::STRESS_MATCHING_TA_DirichletNeumann].emplace_back("n_t=" + std::to_string(i) + " (Dirichlet-Neumann)", resonance_freq_GHz);
-			}
-		}
+	if ((parsed_input.find("stress_matching_freq_LA_both_Neumann") != parsed_input.end())) {
+		should_draw_frequencies[enhance_mechanism::STRESS_MATCHING_LA_NeumannNeumann] = (parsed_input["stress_matching_freq_LA_both_Neumann"] > 0);
+	}
+	if ((parsed_input.find("stress_matching_freq_TA_Dirichlet_Neumann") != parsed_input.end())) {
+		should_draw_frequencies[enhance_mechanism::STRESS_MATCHING_TA_DirichletNeumann] = (parsed_input["stress_matching_freq_TA_Dirichlet_Neumann"] > 0);
 	}
 }
 
