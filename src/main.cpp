@@ -8,11 +8,11 @@
 // #define NDEBUG
 #include <cassert>
 
-#include "../include/constants.h"
-#include "../include/vector.h"
-#include "../include/matrix.h"
-#include "../include/materialparameters.h"
-#include "../include/geometry.h"
+#include "constants.h"
+#include "vector.h"
+#include "matrix.h"
+#include "materialparameters.h"
+#include "geometry.h"
 
 using namespace phonon_pumping;
 
