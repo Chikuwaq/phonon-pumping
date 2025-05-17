@@ -1,3 +1,5 @@
+#pragma once
+
 #include <filesystem>
 #include <iostream>
 
@@ -66,16 +68,16 @@ namespace phonon_pumping {
             return constants::GAMMA * magnetic_field;
         }
 
-        inline double stress_matching_freqt_GHz(const double thickness_m, const uint16_t mode) {
-            return constants::SCALE_TO_GIGA * mag_ct_ms * (2. * mode - 1.) / 2. / thickness_m;
+        inline double stress_matching_freq_TA_both_Neumann_GHz(const double mag_thickness_m, const uint16_t mode) const {
+            return constants::SCALE_TO_GIGA * mag_ct_ms * (2. * mode - 1.) / 2. / mag_thickness_m;
         }
 
-        inline double stress_matching_freql_GHz(const double thickness_m, const uint16_t mode) {
-            return constants::SCALE_TO_GIGA * mag_cl_ms * (2. * mode - 1.) / 2. / thickness_m;
+        inline double stress_matching_freq_LA_both_Neumann_GHz(const double mag_thickness_m, const uint16_t mode) const {
+            return constants::SCALE_TO_GIGA * mag_cl_ms * (2. * mode - 1.) / 2. / mag_thickness_m;
         }
 
-        inline double stress_matching_half_fixed_freqt_GHz(const double thickness_m, const uint16_t mode) {
-            return constants::SCALE_TO_GIGA * mag_ct_ms * (2. * mode - 1.) / 4. / thickness_m;
+        inline double stress_matching_freq_TA_Dirichlet_Neumann_GHz(const double mag_thickness_m, const uint16_t mode) const {
+            return constants::SCALE_TO_GIGA * mag_ct_ms * (2. * mode - 1.) / 4. / mag_thickness_m;
         }
     };
 

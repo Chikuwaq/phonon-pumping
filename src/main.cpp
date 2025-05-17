@@ -174,6 +174,10 @@ void write_gnuplot_script(const Geometry& geometry) {
 
     file << "sp '" << spectrum_datafile_name << "' notitle w pm3d" << std::endl;
 
+    for (auto& [label, value] : geometry.horizontal_lines) {
+        file << "p " << value << " title '" << label << "' w line" << std::endl; // TODO: distinguish by colors
+    }
+
     file << "unset pm3d" << std::endl;
     file << "unset term" << std::endl;
     file << "set output" << std::endl;
@@ -217,7 +221,7 @@ int main(int argc, char *argv[]) {
         material.set(path_material_parameter);
 
         Geometry geometry;
-        geometry.load(path_geometry);
+        geometry.load(path_geometry, material);
 
         // --- compute FMR absorption spectrum
         geometry.setup_grids();

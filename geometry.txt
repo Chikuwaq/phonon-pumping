@@ -15,3 +15,14 @@ n_B = 300
 min_freq_GHz = 10.
 max_freq_GHz = 50.
 n_freq = 300
+
+# horizontal lines to draw
+stress_matching_freq_TA_both_Neumann_min_index = 1
+stress_matching_freq_TA_both_Neumann_max_index = 2
+
+# oblique magnetization not yet supported
+#stress_matching_freq_LA_both_Neumann_min_index = 1
+#stress_matching_freq_LA_both_Neumann_max_index = 1
+
+stress_matching_freq_TA_Dirichlet_Neumann_min_index = 1
+stress_matching_freq_TA_Dirichlet_Neumann_max_index = 1
