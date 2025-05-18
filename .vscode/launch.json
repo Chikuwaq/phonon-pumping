@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "(gdb) Launch on Windows",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/PhononPumpingPlotter.exe",
@@ -12,6 +12,7 @@
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
+            "preLaunchTask": "make on Windows",
             "miDebuggerPath": "C:/Program Files (x86)/mingw64/bin/gdb.exe",
             "setupCommands": [
                 {
@@ -20,6 +21,28 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+
+        {
+            "name": "(clangd) Launch on Mac",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/PhononPumpingPlotter",
+            "args": ["-m", "${workspaceFolder}/material_parameters.txt", "-g", "${workspaceFolder}/geometry.txt"],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "lldb",
+            "preLaunchTask": "make on Mac",
+            // "miDebuggerPath": "/Library/Developer/CommandLineTools/usr/bin/clangd",
+            // "setupCommands": [
+            //     {
+            //         "description": "Enable pretty-printing for clangd",
+            //         "text": "--pretty",
+            //         "ignoreFailures": true
+            //     }
+            // ]
         }
     ]
 }

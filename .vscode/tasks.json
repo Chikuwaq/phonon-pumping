@@ -5,7 +5,26 @@
     },
     "tasks": [
         {
-            "label": "cmake",
+            "label": "cmake on Mac",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S", ".."
+            ]
+        },
+        {
+            "label": "make on Mac",
+            "type": "shell",
+            "command": "make",
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["cmake on Mac"]
+        },
+        {
+            "label": "cmake on Windows",
             "type": "shell",
             "command": "cmake",
             "args": [
@@ -14,7 +33,7 @@
             ]
         },
         {
-            "label": "make",
+            "label": "make on Windows",
             "type": "shell",
             "command": "mingw32-make",
             "args": [],
@@ -22,7 +41,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn": ["cmake"]
+            "dependsOn": ["cmake on Windows"]
         }
     ]
 }
