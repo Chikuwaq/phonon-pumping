@@ -59,6 +59,8 @@ void phonon_pumping::write_gnuplot_script(const MaterialParameters& material, co
     write_gnuplot_command_draw_frequency_line(material, geometry, "yellow", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_TA_NeumannNeumann], file);
     write_gnuplot_command_draw_frequency_line(material, geometry, "olive", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_LA_NeumannNeumann], file);
     write_gnuplot_command_draw_frequency_line(material, geometry, "red", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_TA_DirichletNeumann], file);
+    write_gnuplot_command_draw_frequency_line(material, geometry, "white", frequencies_to_draw[enhance_mechanism::EIGENMODE_TA], file);
+    write_gnuplot_command_draw_frequency_line(material, geometry, "white", frequencies_to_draw[enhance_mechanism::EIGENMODE_LA], file);
 
     file << "sp '" << spectrum_datafile_name << "' notitle w pm3d" << std::endl;
 
@@ -76,9 +78,10 @@ void phonon_pumping::write_gnuplot_command_draw_frequency_line(const MaterialPar
 
     for (auto& [label, freq_GHz] : frequencies_to_draw) {
         // prevent the label from overlapping with the FMR peaks
-        const double alpha = (freq_GHz < FMR_freq_at_middle_B_GHz) ? 0.55 : 0.01;
+        const bool align_right = (freq_GHz < FMR_freq_at_middle_B_GHz);
+        const double alpha = align_right ? 0.55 : 0.01;
         const double label_position_x = (1.0 - alpha) * geometry.min_B_Tesla + alpha * geometry.max_B_Tesla;
-        file << "set arrow from " << geometry.min_B_Tesla << "," << freq_GHz << " to " << geometry.max_B_Tesla << "," << freq_GHz << " nohead front lc '" << color_name << "'" << std::endl;
+        file << "set arrow from " << (align_right ? label_position_x : geometry.min_B_Tesla) << "," << freq_GHz << " to " << (align_right ? geometry.max_B_Tesla : 0.9*middle_B_Tesla) << "," << freq_GHz << " nohead front lc '" << color_name << "'" << std::endl;
         file << "set label '" << label << "' " << " at " << label_position_x << ", " << freq_GHz + label_position_shifty << " front font ',12' textcolor rgb '" << color_name << "'" << std::endl;
     }
 }

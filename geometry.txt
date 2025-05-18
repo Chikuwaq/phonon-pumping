@@ -10,10 +10,10 @@ hperp2 = 2.
 
 # sweep range
 min_B_Tesla = 1.3
-max_B_Tesla = 3.5  #2.6
+max_B_Tesla = 5.0  #2.6  #3.5
 n_B = 300
 min_freq_GHz = 10
-max_freq_GHz = 70  #50
+max_freq_GHz = 100 #50  #70
 n_freq = 300
 
 # Horizontal lines will be drawn at discrete frequencies if the value is positive.

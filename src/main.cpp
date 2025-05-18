@@ -64,19 +64,17 @@ int main(int argc, char *argv[]) {
 
         Geometry geometry;
         geometry.load(path_geometry);
+        geometry.setup_grids();
 
         // label-value pairs of frequency line output
         list_of_frequencies frequencies_to_draw;
         calculate_Gilbert_damping_enhancing_freq(material, geometry, frequencies_to_draw);
+        find_acoustic_eigenfrequencies(material, geometry, frequencies_to_draw);
 
         // --- compute FMR absorption spectrum
-        geometry.setup_grids();
-        
         Matrix2D<double> FMR_power_absorption; 
         calculate_spectrum(material, geometry, FMR_power_absorption);
         output_spectrum(geometry.B_Tesla, geometry.freq_GHz, FMR_power_absorption);
-
-        //find_acoustic_eigenfrequencies(material, geometry, frequencies_to_draw);
 
         write_gnuplot_script(material, geometry, frequencies_to_draw);
 
