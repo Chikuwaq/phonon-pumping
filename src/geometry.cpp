@@ -40,7 +40,7 @@ void phonon_pumping::Geometry::load(const std::filesystem::path& filepath) {
 	max_freq_GHz = parsed_input["max_freq_GHz"];
 	n_freq = parsed_input["n_freq"];
 
-	// calculate resonant frequencies in the output frequency range and store with their labels
+	// calculate Gilbert-damping-enhancing frequencies in the output frequency range and store with their labels
 	// for horizontal line outputs
 	for (bool& should_draw : should_draw_frequencies) {
 		should_draw = false;

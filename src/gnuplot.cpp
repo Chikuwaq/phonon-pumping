@@ -1,7 +1,9 @@
 #include "gnuplot.h"
 
 
-void phonon_pumping::output_spectrum(const Vector<double>& x_values, const Vector<double>& y_values, const Matrix2D<double>& z_values) {
+void phonon_pumping::output_spectrum(const Vector<double>& x_values, 
+                                     const Vector<double>& y_values, 
+                                     const Matrix2D<double>& z_values) {
     std::cout << "\nWriting spectrum data to file..." << std::endl;
 
     std::ofstream file(spectrum_datafile_name);
@@ -26,7 +28,9 @@ void phonon_pumping::output_spectrum(const Vector<double>& x_values, const Vecto
     file.close();
 }
 
-void phonon_pumping::write_gnuplot_script(const MaterialParameters& material, const Geometry& geometry, const list_of_frequencies& frequencies_to_draw) {
+void phonon_pumping::write_gnuplot_script(const MaterialParameters& material, 
+                                          const Geometry& geometry, 
+                                          const list_of_frequencies& frequencies_to_draw) {
     std::cout << "\nWriting gnuplot script file..." << std::endl;
 
     std::ofstream file(gnuplot_file_name);
@@ -56,11 +60,11 @@ void phonon_pumping::write_gnuplot_script(const MaterialParameters& material, co
     file << "set xrange [" << geometry.min_B_Tesla << ":" << geometry.max_B_Tesla << "]" << std::endl;
     file << "set yrange [" << geometry.min_freq_GHz << ":" << geometry.max_freq_GHz << "]" << std::endl;
 
-    write_gnuplot_command_draw_frequency_line(material, geometry, "yellow", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_TA_NeumannNeumann], file);
-    write_gnuplot_command_draw_frequency_line(material, geometry, "olive", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_LA_NeumannNeumann], file);
-    write_gnuplot_command_draw_frequency_line(material, geometry, "red", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_TA_DirichletNeumann], file);
-    write_gnuplot_command_draw_frequency_line(material, geometry, "white", frequencies_to_draw[enhance_mechanism::EIGENMODE_TA], file);
-    write_gnuplot_command_draw_frequency_line(material, geometry, "white", frequencies_to_draw[enhance_mechanism::EIGENMODE_LA], file);
+    write_gnuplot_command_draw_frequency_line(material, geometry, "yellow", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_TA_NeumannNeumann], false, file);
+    write_gnuplot_command_draw_frequency_line(material, geometry, "olive", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_LA_NeumannNeumann], false, file);
+    write_gnuplot_command_draw_frequency_line(material, geometry, "red", frequencies_to_draw[enhance_mechanism::STRESS_MATCHING_TA_DirichletNeumann], false, file);
+    write_gnuplot_command_draw_frequency_line(material, geometry, "white", frequencies_to_draw[enhance_mechanism::EIGENMODE_TA], true, file);
+    write_gnuplot_command_draw_frequency_line(material, geometry, "white", frequencies_to_draw[enhance_mechanism::EIGENMODE_LA], true, file);
 
     file << "sp '" << spectrum_datafile_name << "' notitle w pm3d" << std::endl;
 
@@ -70,18 +74,45 @@ void phonon_pumping::write_gnuplot_script(const MaterialParameters& material, co
     file << "set output" << std::endl;
 }
 
-void phonon_pumping::write_gnuplot_command_draw_frequency_line(const MaterialParameters& material, const Geometry& geometry, const std::string& color_name, const std::vector<std::pair<std::string, double>>& frequencies_to_draw, std::ofstream& file) {
+void phonon_pumping::write_gnuplot_command_draw_frequency_line(const MaterialParameters& material, 
+                                                               const Geometry& geometry, 
+                                                               const std::string& color_name, 
+                                                               const std::vector<std::pair<std::string, double>>& frequencies_to_draw, 
+                                                               const bool outside, 
+                                                               std::ofstream& file) {
+    if (frequencies_to_draw.size() == 0) return;
+
     // estimate FMR frequency at the middle magnetic field
     const double middle_B_Tesla = 0.5 * (geometry.min_B_Tesla + geometry.max_B_Tesla);
     const double FMR_freq_at_middle_B_GHz = 0.5 * (material.omega11_no_MEC_no_Gilbert_damping(middle_B_Tesla, geometry.magnetization_angle_radian) + material.omega22_no_MEC_no_Gilbert_damping(middle_B_Tesla, geometry.magnetization_angle_radian)) * constants::SCALE_TO_GIGA / 2.0 / constants::PI;
     const double label_position_shifty = 0.05 * (geometry.max_freq_GHz - geometry.min_freq_GHz);
 
+    constexpr double middle_space = 0.2;
+    const double x0 = screen_position_x(geometry, 0.0);
+    const double x1 = screen_position_x(geometry, (0.0 + 0.5 - middle_space / 2.0) / 2.0);
+    const double x2 = screen_position_x(geometry, 0.5 - middle_space / 2.0);
+    const double x3 = screen_position_x(geometry, 0.5 + middle_space / 2.0);
+    const double x4 = screen_position_x(geometry, (0.5 + middle_space / 2.0 + 1.0) / 2.0);
+    const double x5 = screen_position_x(geometry, 1.0);
     for (auto& [label, freq_GHz] : frequencies_to_draw) {
         // prevent the label from overlapping with the FMR peaks
-        const bool align_right = (freq_GHz < FMR_freq_at_middle_B_GHz);
-        const double alpha = align_right ? 0.55 : 0.01;
-        const double label_position_x = (1.0 - alpha) * geometry.min_B_Tesla + alpha * geometry.max_B_Tesla;
-        file << "set arrow from " << (align_right ? label_position_x : geometry.min_B_Tesla) << "," << freq_GHz << " to " << (align_right ? geometry.max_B_Tesla : 0.9*middle_B_Tesla) << "," << freq_GHz << " nohead front lc '" << color_name << "'" << std::endl;
-        file << "set label '" << label << "' " << " at " << label_position_x << ", " << freq_GHz + label_position_shifty << " front font ',12' textcolor rgb '" << color_name << "'" << std::endl;
+        const bool use_right_half = (freq_GHz < FMR_freq_at_middle_B_GHz);
+         
+        double arrow_start, arrow_end;
+        if (use_right_half) {
+            arrow_start = outside ? x4 : x3;
+            arrow_end = outside ? x5 : x4;
+        }
+        else {
+            arrow_start = outside ? x0 : x1;
+            arrow_end = outside ? x1 : x2;
+        }
+        file << "set arrow from " << arrow_start << "," << freq_GHz << " to " << arrow_end << "," << freq_GHz << " nohead front lc '" << color_name << "'" << std::endl;
+        file << "set label '" << label << "' " << " at " << arrow_start << ", " << freq_GHz + label_position_shifty << " front font ',12' textcolor rgb '" << color_name << "'" << std::endl;
     }
+}
+
+double phonon_pumping::screen_position_x(const Geometry& geometry, 
+                                         const double position_with_respect_to_screen) {
+    return (1.0 - position_with_respect_to_screen) * geometry.min_B_Tesla + position_with_respect_to_screen * geometry.max_B_Tesla;
 }
