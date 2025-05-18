@@ -15,11 +15,8 @@ void phonon_pumping::Geometry::load(const std::filesystem::path& filepath) {
 
 	auto parsed_input = parse_file(filepath);
 
-	if (parsed_input.find("magnetization_angle_radian") == parsed_input.end()) {
+	if (parsed_input.find("magnetization_angle_per_2pi") == parsed_input.end()) {
 		throw std::runtime_error("Magnetization angle is missing in the input file");
-	}
-	if (parsed_input["magnetization_angle_radian"] != 0.0) {
-		throw std::runtime_error("Nonzero magnetization angle is not yet implemented");
 	}
 	for (const auto& [key, value] : parsed_input) {
 		std::cout << key << " = " << value << std::endl;
@@ -27,7 +24,7 @@ void phonon_pumping::Geometry::load(const std::filesystem::path& filepath) {
 
 	mag_thickness_nm = parsed_input["mag_thickness_nm"];
 	nonmag_thickness_nm = parsed_input["nonmag_thickness_nm"];
-	magnetization_angle_radian = parsed_input["magnetization_angle_radian"];
+	magnetization_angle_radian = 2.0 * constants::PI * parsed_input["magnetization_angle_per_2pi"];
 
 	h_static = parsed_input["h_static"];
 	hpara2 = parsed_input["hpara2"];
