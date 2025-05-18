@@ -1,5 +1,10 @@
 # Phonon-pumping in magnetic|nonmagnetic bilayers
-This program generates data file and gnuplot script that generate FMR power absorption spectra.
+This program generates data file and [gnuplot](https://gnuplot.sourceforge.net) script for producing FMR power absorption spectra discussed in [our paper](https://doi.org/10.1103/PhysRevB.104.014403).
+Specifically,
+1. Loads material parameters and geometry from files. 'Geometry' includes plot settings such as magnetic field and frequency range.
+2. Calculates the FMR power absorption spectrum according to Eq. (36).
+3. Within the plot range, search for the frequencies of Fig. 3(c2) and (c3), which are expected to enhance Gilbert damping via magnetoelastic coupling.
+4. Writes a data file of the FMR spectrum and a [gnuplot](https://gnuplot.sourceforge.net) script for producing Figs. 3(d)(e) and 4(b)(d).
 
 ## How to compile executable
 Build depends on 
@@ -51,7 +56,7 @@ If the two input files are in the same directory as the executable, this simplif
 
 (Windows)
 ```sh
-.\PhononPumpingPlotter.exe -m .\material_parameters.txt -g .\geometry.txt
+.\PhononPumpingPlotter.exe -m .\material_parameters.conf -g .\geometry.conf
 ```
 4. Run the gnuplot script. A PDF file will be generated in the same directory.
 5. If needed, you can modify the gnuplot script manually to optimize the visualization.
