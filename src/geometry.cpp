@@ -54,6 +54,12 @@ void phonon_pumping::Geometry::load(const std::filesystem::path& filepath) {
 	if ((parsed_input.find("stress_matching_freq_TA_Dirichlet_Neumann") != parsed_input.end())) {
 		should_draw_frequencies[enhance_mechanism::STRESS_MATCHING_TA_DirichletNeumann] = (parsed_input["stress_matching_freq_TA_Dirichlet_Neumann"] > 0);
 	}
+	if ((parsed_input.find("TA_modes") != parsed_input.end())) {
+		should_draw_frequencies[enhance_mechanism::EIGENMODE_TA] = (parsed_input["TA_modes"] > 0);
+	}
+	if ((parsed_input.find("LA_modes") != parsed_input.end())) {
+		should_draw_frequencies[enhance_mechanism::EIGENMODE_LA] = (parsed_input["LA_modes"] > 0);
+	}
 }
 
 void phonon_pumping::Geometry::setup_grids() {
