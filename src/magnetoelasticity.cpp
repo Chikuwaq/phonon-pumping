@@ -39,22 +39,22 @@ void phonon_pumping::calculate_spectrum(const MaterialParameters& material, cons
         beta_prime(1, 1, i_freq) = sinh(mag_damped_phase) * sinh(nonmag_damped_phase) + impedance_ratio_t * material.nonmag_eta_Hz / material.mag_eta_Hz * cosh(mag_damped_phase) * cosh(nonmag_damped_phase);
     }
 
-    Matrix2D<double> h; h.zeros(4, geometry.n_freq); // 4-element vector with elements being a function of frequency
+    Matrix2D<double> ht; ht.zeros(4, geometry.n_freq); // 4-element vector with elements being a function of frequency
     for (size_t i_freq = 0; i_freq < geometry.n_freq; i_freq++) {
-        h(0, i_freq) = -omega_Hz(i_freq) * (beta(1, 0, i_freq) * cos(phi(i_freq)) * cos(xi(i_freq)) - beta(0, 1, i_freq) * sin(phi(i_freq)) * sin(xi(i_freq))) - 0.5 * material.mag_eta_Hz * (beta_prime(0, 0, i_freq) * sin(phi(i_freq)) * cos(xi(i_freq)) + beta_prime(1, 1, i_freq) * cos(phi(i_freq)) * sin(xi(i_freq)));
-        h(1, i_freq) = omega_Hz(i_freq) * (beta(0, 0, i_freq) * sin(phi(i_freq)) * cos(xi(i_freq)) + beta(1, 1, i_freq) * cos(phi(i_freq)) * sin(xi(i_freq))) - 0.5 * material.mag_eta_Hz * (beta_prime(1, 0, i_freq) * cos(phi(i_freq)) * cos(xi(i_freq)) - beta_prime(0, 1, i_freq) * sin(phi(i_freq)) * sin(xi(i_freq)));
-        h(2, i_freq) = omega_Hz(i_freq) * ((cosh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta(0, 0, i_freq)) * cos(phi(i_freq)) * cos(xi(i_freq)) - (sinh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta(1, 1, i_freq)) * sin(phi(i_freq)) * sin(xi(i_freq)) - 2. * cosh(nonmag_damped_phase) * cos(xi(i_freq))) + 0.5 * material.mag_eta_Hz * ((sinh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta_prime(1, 0, i_freq)) * sin(phi(i_freq)) * cos(xi(i_freq)) + (cosh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta_prime(0, 1, i_freq)) * cos(phi(i_freq)) * sin(xi(i_freq)) - 2. * sinh(nonmag_damped_phase) * sin(xi(i_freq)));
-        h(3, i_freq) = -omega_Hz(i_freq) * ((sinh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta(1, 0, i_freq)) * sin(phi(i_freq)) * cos(xi(i_freq)) + (cosh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta(0, 1, i_freq)) * cos(phi(i_freq)) * sin(xi(i_freq)) - 2. * sinh(nonmag_damped_phase) * sin(xi(i_freq))) + 0.5 * material.mag_eta_Hz * ((cosh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta_prime(0, 0, i_freq)) * cos(phi(i_freq)) * cos(xi(i_freq)) - (sinh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta_prime(1, 1, i_freq)) * sin(phi(i_freq)) * sin(xi(i_freq)) - 2. * cosh(nonmag_damped_phase) * cos(xi(i_freq)));
+        ht(0, i_freq) = -omega_Hz(i_freq) * (beta(1, 0, i_freq) * cos(phi(i_freq)) * cos(xi(i_freq)) - beta(0, 1, i_freq) * sin(phi(i_freq)) * sin(xi(i_freq))) - 0.5 * material.mag_eta_Hz * (beta_prime(0, 0, i_freq) * sin(phi(i_freq)) * cos(xi(i_freq)) + beta_prime(1, 1, i_freq) * cos(phi(i_freq)) * sin(xi(i_freq)));
+        ht(1, i_freq) = omega_Hz(i_freq) * (beta(0, 0, i_freq) * sin(phi(i_freq)) * cos(xi(i_freq)) + beta(1, 1, i_freq) * cos(phi(i_freq)) * sin(xi(i_freq))) - 0.5 * material.mag_eta_Hz * (beta_prime(1, 0, i_freq) * cos(phi(i_freq)) * cos(xi(i_freq)) - beta_prime(0, 1, i_freq) * sin(phi(i_freq)) * sin(xi(i_freq)));
+        ht(2, i_freq) = omega_Hz(i_freq) * ((cosh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta(0, 0, i_freq)) * cos(phi(i_freq)) * cos(xi(i_freq)) - (sinh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta(1, 1, i_freq)) * sin(phi(i_freq)) * sin(xi(i_freq)) - 2. * cosh(nonmag_damped_phase) * cos(xi(i_freq))) + 0.5 * material.mag_eta_Hz * ((sinh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta_prime(1, 0, i_freq)) * sin(phi(i_freq)) * cos(xi(i_freq)) + (cosh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta_prime(0, 1, i_freq)) * cos(phi(i_freq)) * sin(xi(i_freq)) - 2. * sinh(nonmag_damped_phase) * sin(xi(i_freq)));
+        ht(3, i_freq) = -omega_Hz(i_freq) * ((sinh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta(1, 0, i_freq)) * sin(phi(i_freq)) * cos(xi(i_freq)) + (cosh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta(0, 1, i_freq)) * cos(phi(i_freq)) * sin(xi(i_freq)) - 2. * sinh(nonmag_damped_phase) * sin(xi(i_freq))) + 0.5 * material.mag_eta_Hz * ((cosh(mag_damped_phase) * cosh(nonmag_damped_phase) + beta_prime(0, 0, i_freq)) * cos(phi(i_freq)) * cos(xi(i_freq)) - (sinh(mag_damped_phase) * sinh(nonmag_damped_phase) + beta_prime(1, 1, i_freq)) * sin(phi(i_freq)) * sin(xi(i_freq)) - 2. * cosh(nonmag_damped_phase) * cos(xi(i_freq)));
     }
 
     // dynamical magnetoelastic coupling 
-    Vector<double> g_real; g_real.zeros(geometry.n_freq);
-    Vector<double> g_imag; g_imag.zeros(geometry.n_freq);
+    Vector<double> gt_real; gt_real.zeros(geometry.n_freq);
+    Vector<double> gt_imag; gt_imag.zeros(geometry.n_freq);
     for (size_t i_freq = 0; i_freq < geometry.n_freq; i_freq++) {
         const double omega = omega_Hz(i_freq);
-        const double g_front = -pow(material.omegac(), 2) * material.Ms_Jm3 / constants::GAMMA / mag_thickness_m / material.mag_rho_kgm3 / material.mag_ct_ms / (pow(omega, 2) + pow(0.5 * material.mag_eta_Hz, 2));
-        g_real(i_freq) = g_front * (-omega * (h(0, i_freq) * h(3, i_freq) - h(1, i_freq) * h(2, i_freq)) + 0.5 * material.mag_eta_Hz * (h(0, i_freq) * h(2, i_freq) + h(1, i_freq) * h(3, i_freq)))/(pow(h(0, i_freq), 2) + pow(h(1, i_freq), 2));
-        g_imag(i_freq) = g_front * (omega * (h(0, i_freq) * h(2, i_freq) + h(1, i_freq) * h(3, i_freq)) + 0.5 * material.mag_eta_Hz * (h(0, i_freq) * h(3, i_freq) - h(1, i_freq) * h(2, i_freq)))/(pow(h(0, i_freq), 2) + pow(h(1, i_freq), 2));
+        const double gt_front = -pow(material.omegact(), 2) * material.Ms_Jm3 / constants::GAMMA / mag_thickness_m / material.mag_rho_kgm3 / material.mag_ct_ms / (pow(omega, 2) + pow(0.5 * material.mag_eta_Hz, 2));
+        gt_real(i_freq) = gt_front * (-omega * (ht(0, i_freq) * ht(3, i_freq) - ht(1, i_freq) * ht(2, i_freq)) + 0.5 * material.mag_eta_Hz * (ht(0, i_freq) * ht(2, i_freq) + ht(1, i_freq) * ht(3, i_freq)))/(pow(ht(0, i_freq), 2) + pow(ht(1, i_freq), 2));
+        gt_imag(i_freq) = gt_front * (omega * (ht(0, i_freq) * ht(2, i_freq) + ht(1, i_freq) * ht(3, i_freq)) + 0.5 * material.mag_eta_Hz * (ht(0, i_freq) * ht(3, i_freq) - ht(1, i_freq) * ht(2, i_freq)))/(pow(ht(0, i_freq), 2) + pow(ht(1, i_freq), 2));
     }
     Vector<double> gl_real; gl_real.zeros(geometry.n_freq);
     Vector<double> gl_imag; gl_imag.zeros(geometry.n_freq);
@@ -78,10 +78,10 @@ void phonon_pumping::calculate_spectrum(const MaterialParameters& material, cons
             const double omH = material.omegaH(geometry.B_Tesla(i_B));
             const double omK = material.omegaK();
             const double omM = material.omegaM();
-            Omega_real(0, i_freq, i_B) = omH + (omK-omM-g_real(i_freq)) * pow(cos(geometry.magnetization_angle_radian), 2);
-            Omega_imag(0, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - g_imag(i_freq) * pow(cos(geometry.magnetization_angle_radian), 2);
-            Omega_real(1, i_freq, i_B) = omH + (omK-omM) * cos(2. * geometry.magnetization_angle_radian) - g_real(i_freq) * pow(cos(2 * geometry.magnetization_angle_radian), 2) - gl_real(i_freq) * pow(sin(2 * geometry.magnetization_angle_radian), 2);
-            Omega_imag(1, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - g_imag(i_freq) * pow(cos(2 * geometry.magnetization_angle_radian), 2) - gl_imag(i_freq) * pow(sin(2 * geometry.magnetization_angle_radian), 2);
+            Omega_real(0, i_freq, i_B) = omH + (omK-omM-gt_real(i_freq)) * pow(cos(geometry.magnetization_angle_radian), 2);
+            Omega_imag(0, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - gt_imag(i_freq) * pow(cos(geometry.magnetization_angle_radian), 2);
+            Omega_real(1, i_freq, i_B) = omH + (omK-omM) * cos(2. * geometry.magnetization_angle_radian) - gt_real(i_freq) * pow(cos(2 * geometry.magnetization_angle_radian), 2) - gl_real(i_freq) * pow(sin(2 * geometry.magnetization_angle_radian), 2);
+            Omega_imag(1, i_freq, i_B) = -material.Gilbert_damping * omega_Hz(i_freq) - gt_imag(i_freq) * pow(cos(2 * geometry.magnetization_angle_radian), 2) - gl_imag(i_freq) * pow(sin(2 * geometry.magnetization_angle_radian), 2);
 
             const double Delta_real = Omega_real(0, i_freq, i_B) * Omega_real(1, i_freq, i_B) - Omega_imag(0, i_freq, i_B) * Omega_imag(1, i_freq, i_B) - pow(omega_Hz(i_freq), 2);
             const double Delta_imag = Omega_real(0, i_freq, i_B) * Omega_imag(1, i_freq, i_B) + Omega_imag(0, i_freq, i_B) * Omega_real(1, i_freq, i_B);

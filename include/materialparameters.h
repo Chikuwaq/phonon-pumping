@@ -57,7 +57,7 @@ namespace phonon_pumping {
             return constants::GAMMA * constants::MU0 * Ms_Jm3;
         }
 
-        inline double omegac() const {
+        inline double omegact() const {
             return 0.5 * omegaM() + constants::GAMMA * (b2_Jm3 - K1_Jm3) / Ms_Jm3;
         }
 
