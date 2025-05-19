@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Takuma Sato
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 #include "materialparameters.h"
 
 void phonon_pumping::MaterialParameters::set(const std::filesystem::path& filepath) {

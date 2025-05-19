@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Takuma Sato
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
@@ -19,6 +25,7 @@
 
 using namespace phonon_pumping;
 
+constexpr std::string_view VERSION_NO = "1.0.0";
 
 void print_usage() {
     std::cout << "Usage: ./PhononPumpingPlotter -m path/to/material_parameter_file -g path/to/geometry_file" << std::endl;
@@ -83,7 +90,12 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    std::cout << "\nPhononPumpingPlotter DONE. Run the gnuplot script " << gnuplot_file_name << " to generate figures." << std::endl;
+    std::cout << "DONE. " << std::endl;
+    std::cout << "Run the gnuplot script " << gnuplot_file_name << " to generate figures." << std::endl;
+    std::cout << "\n-----------------------------------------------------------------" << std::endl;
+    std::cout << "Phonon-pumping plotter " << VERSION_NO << " © 2025 Takuma Sato" << std::endl;
+    std::cout << "This program is distributed under the GNU General Public License \nversion 3.0, or any later version." << std::endl;
+    std::cout << "-----------------------------------------------------------------" << std::endl;
     
     return 0;
 }
