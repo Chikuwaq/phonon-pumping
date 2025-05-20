@@ -32,9 +32,10 @@ cmake -S .. -B . -G "MinGW Makefiles"
 mingw32-make
 ```
 
+`CMakeLists.txt` determines whether the build should be Debug or Release mode. Look for the variable `DEBUG_MODE`.
 The executable will be saved under `build/bin/`.
 
-NOTE: On Windows, the executable might require the dynamic libraries `mingw64\bin\libstdc++-6.dll` and `libgcc_s_seh-1.dll` to be present in the same directory. In that case, simply copy-paste the dlls.
+NOTE: On Windows, the executable might require the dynamic libraries `mingw64\bin\libstdc++-6.dll` and `libgcc_s_seh-1.dll` to be present in the same directory. In that case, copy-paste the dlls to the directory.
 
 
 ## How to use
@@ -52,11 +53,11 @@ The material parameters are specified in a material parameter file. The layer th
 ```sh
 .\PhononPumpingPlotter.exe -m path\to\material_parameter_file -g path\to\geometry_file
 ```
-If the two input files are in the same directory as the executable, this simplifies to:
 
-(Windows)
+For example on Windows, run the following from the project root directory:
 ```sh
-.\PhononPumpingPlotter.exe -m .\material_parameters.conf -g .\geometry.conf
+.\build\bin\release\PhononPumpingPlotter.exe -m .\examples\material_parameters_YIG-GGG.conf -g .\examples\geometry_Sato2021_fig3d.conf
 ```
+
 4. Run the gnuplot script. A PDF file will be generated in the same directory.
 5. If needed, you can modify the gnuplot script manually to optimize the visualization.

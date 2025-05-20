@@ -11,8 +11,6 @@
 #include <cmath>
 #include <array>
 
-// uncomment to disable assert()
-// #define NDEBUG
 #include <cassert>
 
 #include "constants.h"
