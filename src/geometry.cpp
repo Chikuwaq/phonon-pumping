@@ -24,6 +24,10 @@ void phonon_pumping::Geometry::load(const std::filesystem::path& filepath) {
 	if (parsed_input.find("magnetization_angle_per_2pi") == parsed_input.end()) {
 		throw std::runtime_error("Magnetization angle is missing in the input file");
 	}
+	if (parsed_input["magnetization_angle_per_2pi"] != 0.0) {
+		throw std::runtime_error("Currently, only perpendicular magnetization is supported.");
+	}
+
 	for (const auto& [key, value] : parsed_input) {
 		std::cout << key << " = " << value << std::endl;
 	}
