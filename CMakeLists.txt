@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # switch between Debug and Release modes
 # 'Release' disables assert().
-set(DEBUG_MODE ON)
+set(DEBUG_MODE OFF)
 
 if(${DEBUG_MODE})
     # include debug info in the Debug mode
