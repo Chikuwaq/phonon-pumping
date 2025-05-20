@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <vector>
+#include <array>
+
 namespace constants {
     constexpr double PI = 3.141592653589;
 

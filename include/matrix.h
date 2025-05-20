@@ -8,6 +8,7 @@
 
 #include <cstdio>
 #include <vector>
+#include <stdexcept>
 
 // Data is stored by row-major so that 
 // for i for j Matrix(i, j)
