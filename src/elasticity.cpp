@@ -109,7 +109,7 @@ void phonon_pumping::append_eigenfrequencies(const MaterialParameters& material,
     // find roots of the eigenvalue equation by the Secant method and store them 
     const double dfreq = geometry.freq_GHz(1) - geometry.freq_GHz(0);
     uint16_t i_eigenmode = 0;
-    for (double freq_GHz = 0; freq_GHz <= geometry.freq_GHz(geometry.n_freq - 1); freq_GHz += dfreq) { // loop must start from 0 GHz to enumerate eigenfrequencies
+    for (double freq_GHz = 0 + dfreq; freq_GHz <= geometry.freq_GHz(geometry.n_freq - 1); freq_GHz += dfreq) { // zero frequency is always a solution of the eigenvalue equation. We exclude it from mode numbering. loop must start from slightly above 0 GHz to enumerate eigenfrequencies
         const double freq0 = freq_GHz;
         const double freq1 = freq_GHz + dfreq;
         if (lhs(freq0) * lhs(freq1) > 0) continue;
