@@ -6,6 +6,7 @@
 
 #include "elasticity.h"
 #include "numerics.h"
+#include "console.h"
 
 void phonon_pumping::calculate_Gilbert_damping_enhancing_freq(const MaterialParameters& material, const Geometry& geometry, list_of_frequencies& frequencies_to_draw) {
     if (geometry.should_draw_frequencies[enhance_mechanism::STRESS_MATCHING_TA_NeumannNeumann]) {
@@ -85,6 +86,9 @@ void phonon_pumping::find_acoustic_eigenfrequencies(const MaterialParameters& ma
         std::cout << "\nSearching for LA mode eigenfrequencies..." << std::endl;
         append_eigenfrequencies(material, geometry, enhance_mechanism::EIGENMODE_LA, frequencies_to_draw);
     }
+
+    std::cout << "\nFound relevant frequencies:" << std::endl;
+    printFreqs(frequencies_to_draw);
 }
 
 void phonon_pumping::append_eigenfrequencies(const MaterialParameters& material, 
