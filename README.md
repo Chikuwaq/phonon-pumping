@@ -12,6 +12,7 @@ Build depends on
 * some `make` tool
 * C++ compiler and linker
 
+### Linux/Mac
 On Mac, `cmake` can be installed by `Homebrew`. Xcode command line tools contains C++ build tools.
 In the project root folder, run:
 ```sh
@@ -21,7 +22,7 @@ cmake -S .. -B .
 make
 ```
 
-On Windows, 
+### Windows
 1. install `cmake`
 2. download a zip containing the keyword `uvcrt` from [MinGW binaries](https://github.com/niXman/mingw-builds-binaries/releases), extract them and move the folder `mingw64` under `C:\Program Files (x86)`. Add `C:\Program Files (x86)\mingw64\bin` to PATH.
 In the project root folder, run:
