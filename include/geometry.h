@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <cstdio>
 #include <stdexcept>
 #include <iostream>
 #include <array>
