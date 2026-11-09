@@ -8,10 +8,6 @@
 #include <fstream>
 #include <stdexcept>
 #include <filesystem>
-#include <cmath>
-#include <array>
-
-#include <cassert>
 
 #include "constants.h"
 #include "matrix.h"
@@ -23,7 +19,7 @@
 
 using namespace phonon_pumping;
 
-constexpr std::string_view VERSION_NO = "1.0.0";
+constexpr std::string_view VERSION_NO = "1.0.1";
 
 void print_usage() {
     std::cout << "Usage: ./PhononPumpingPlotter -m path/to/material_parameter_file -g path/to/geometry_file" << std::endl;
