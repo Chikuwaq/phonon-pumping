@@ -16,4 +16,5 @@ namespace phonon_pumping {
     double eigenvalue_equation(const MaterialParameters& material, const Geometry& geometry, const bool is_TA, const double freq_GHz);
     void find_acoustic_eigenfrequencies(const MaterialParameters& material, const Geometry& geometry, list_of_frequencies& frequencies_to_draw);
     void append_eigenfrequencies(const MaterialParameters& material, const Geometry& geometry, const enhance_mechanism i_mechanism, list_of_frequencies& frequencies_to_draw);
+    std::vector<double> extract_LA_frequencies(const list_of_frequencies& frequencies);
 }

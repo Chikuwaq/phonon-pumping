@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <cstdio>
 #include <vector>
 #include <stdexcept>
 
@@ -18,6 +17,14 @@ class Vector {
     public:
     Vector() {};
     ~Vector() {};
+
+    Vector(const Vector<T>& other)
+    : data_(other.data_) {
+    }
+
+    Vector(Vector<T>&& other) {
+        data_ = std::move(other.data_);
+    }
 
     // fill the vector by equidistant values in the range [min, max)
     void linspace(const T min, const T max, const size_t nElements) {
@@ -53,5 +60,11 @@ class Vector {
 
     size_t size() const {
         return data_.size();
+    }
+
+    void println() const {
+        for (const T& element : data_) {
+            std::cout << element << std::endl;
+        }
     }
 };

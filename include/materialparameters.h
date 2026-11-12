@@ -28,6 +28,9 @@ namespace phonon_pumping {
         double nonmag_cl_ms;
         double nonmag_eta_Hz; // in general depends on freq_Hz, but approximately constant in the GHz range
 
+        double min_cl_ms;
+        double max_cl_ms;
+
         // magnetic properties
         double K1_Jm3;
         double Ms_Jm3;

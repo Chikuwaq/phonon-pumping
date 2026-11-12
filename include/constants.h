@@ -25,7 +25,7 @@ namespace phonon_pumping {
         STRESS_MATCHING_LA_NeumannNeumann,
         STRESS_MATCHING_TA_DirichletNeumann,
         EIGENMODE_TA,
-        EIGENMODE_LA, // Check: this resonance exists, doesn't it?
+        EIGENMODE_LA,
         NUM_ELEMENTS
     };
 

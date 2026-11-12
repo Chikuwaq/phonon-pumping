@@ -43,6 +43,42 @@
             //         "ignoreFailures": true
             //     }
             // ]
+        },
+
+        {
+            "name": "Debug on Linux (icx, CMake build)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/debug/PhononPumpingPlotter",
+            "args": [
+                "-m", "~/repo/phonon-pumping/examples/material_parameters_Co-Pt-Patel2026.conf",
+                "-g", "~/repo/phonon-pumping/examples/geometry.conf",
+                "-t", "~/repo/phonon-pumping/examples/task.conf",
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/bin/debug/",
+            "environment": [
+                {
+                "name": "LD_LIBRARY_PATH",
+                "value": "/opt/intel/oneapi/2026.1/lib/:${env:LD_LIBRARY_PATH}"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/opt/intel/oneapi/debugger/2026.1/opt/debugger/bin/gdb-oneapi",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description":  "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "cmake-build-debug"  // defined in tasks.json
         }
     ]
 }

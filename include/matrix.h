@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <cstdio>
+#include <limits>
 #include <vector>
 #include <stdexcept>
 
@@ -66,6 +66,25 @@ class Matrix2D {
         check_allocated();
         return data_[0].size();
     };
+
+    std::tuple<size_t, size_t, T> min() const {
+        T value = std::numeric_limits<T>::max();
+        size_t irow_min = -1;
+        size_t icol_min = -1;
+
+        for (size_t irow = 0; irow < nRow(); irow++) {
+            for (size_t icol = 0; icol < nCol(); icol++) {
+                const T element = operator()(irow, icol);
+                if (element < value) {
+                    value = element;
+                    irow_min = irow;
+                    icol_min = icol;
+                }
+                value = std::min(value, element);
+            }
+        }
+        return std::tuple<size_t, size_t, T>(irow_min, icol_min, value);
+    }
 };
 
 // data is stored by row-major

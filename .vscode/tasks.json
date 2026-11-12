@@ -5,6 +5,11 @@
     },
     "tasks": [
         {
+            "label": "cmake-build-debug",
+            "type": "shell",
+            "command": "cmake -S .. -B . && make"
+        },
+        {
             "label": "cmake on Mac",
             "type": "shell",
             "command": "cmake",

@@ -125,3 +125,11 @@ void phonon_pumping::append_eigenfrequencies(const MaterialParameters& material,
         frequencies_to_draw[i_mechanism].emplace_back(label + " " + std::to_string(i_eigenmode), eigenfrequency_GHz);
     }
 }
+
+std::vector<double> phonon_pumping::extract_LA_frequencies(const list_of_frequencies& frequencies) {
+    std::vector<double> LA_frequencies;
+    for (auto& [key, freq] : frequencies[enhance_mechanism::EIGENMODE_LA]) {
+        LA_frequencies.push_back(freq);
+    };
+    return LA_frequencies;
+};
