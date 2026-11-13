@@ -20,7 +20,7 @@
 
 using namespace phonon_pumping;
 
-constexpr std::string_view VERSION_NO = "1.0.1";
+constexpr std::string_view VERSION_NO = "1.1.0";
 
 void print_usage() {
     std::cout << "Usage: ./PhononPumpingPlotter -m path/to/material_parameter_file -g path/to/geometry_file -t path/to/task_file" << std::endl;
