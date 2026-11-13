@@ -46,7 +46,7 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
     // copy data not to damage the original
     MaterialParameters materialTemp = material;
 
-    constexpr double n_sound_velocities = 100.0;
+    constexpr double n_sound_velocities = 400.0;
     Vector<double> sound_velocities_magnet; 
     sound_velocities_magnet.linspace(material.min_cl_ms, material.max_cl_ms, n_sound_velocities);
     Vector<double> sound_velocities_nonmagnet = sound_velocities_magnet;
@@ -70,17 +70,15 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
                 const double deviation = target_freqs[i_freq] - LA_frequencies[i_freq];
                 sum += deviation * deviation;
             }
-            std::cout << "sqrt(Sum of squared frequency deviation) = " << std::sqrt(sum) << std::endl;
             deviations(i_sound_velocity_magnet, i_sound_velocity_nonmagnet) = std::sqrt(sum);
         }
     }
+
     auto [irow, icol, min_value] = deviations.min();
     std::cout << "Fitting results: " << std::endl;
     std::cout << "\tSound velocity of magnet = " << sound_velocities_magnet(irow) << std::endl;
     std::cout << "\tSound velocity of nonmagnet = " << sound_velocities_nonmagnet(icol) << std::endl;
     std::cout << "\tsqrt(Sum of squared frequency deviation) = " << min_value << std::endl;
-    
-
 }
 
 
