@@ -72,6 +72,13 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
             find_acoustic_eigenfrequencies(materialTemp, geometry, need_TA, need_LA, eigenfrequencies);
 
             std::vector<double> mode_frequencies = extract_mode_frequencies(mode, eigenfrequencies);
+            if (mode_frequencies.size() < target_freqs.size()) {
+                const double highest_freq_found = mode_frequencies[mode_frequencies.size() - 1];
+                const double highest_freq_target = target_freqs[target_freqs.size() - 1];
+                const bool should_find_next_freq = (highest_freq_found < highest_freq_target);
+                if (should_find_next_freq)
+                    throw std::runtime_error("Number of eigenfrequencies found is smaller than the number of target frequencies! Please consider increasing 'max_freq_GHz' in the geometry file.");
+            }
             const uint16_t n_freqs = std::min(target_freqs.size(), mode_frequencies.size());
             double sum = 0.0;
             for (uint16_t i_freq = 0; i_freq < n_freqs; i_freq++) {
@@ -168,7 +175,7 @@ int main(int argc, char *argv[]) {
         }
 
     } catch (const std::exception& e) {
-        std::cout << "ERROR: " << e.what() << std::endl;
+        std::cout << "ERROR: " << e.what() << std::endl << std::endl;
         return EXIT_FAILURE;
     }
 
