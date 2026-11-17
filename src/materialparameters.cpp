@@ -25,8 +25,10 @@ void phonon_pumping::MaterialParameters::set(const std::filesystem::path& filepa
 	nonmag_cl_ms = result["nonmag_cl_ms"];
 	nonmag_eta_Hz = 2.0 * constants::PI * result["nonmag_eta_Hz"];
 
-	min_cl_ms = result["min_cl_ms"];
-	max_cl_ms = result["max_cl_ms"];
+	min_transverse_sound_velocity_ms = result["min_transverse_sound_velocity_ms"];
+	max_transverse_sound_velocity_ms = result["max_transverse_sound_velocity_ms"];
+	min_longitudinal_sound_velocity_ms = result["min_longitudinal_sound_velocity_ms"];
+	max_longitudinal_sound_velocity_ms = result["max_longitudinal_sound_velocity_ms"];
 
 	K1_Jm3 = result["K1_Jm3"];
 	Ms_Jm3 = result["Ms_Jm3"];

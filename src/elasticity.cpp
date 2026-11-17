@@ -77,12 +77,16 @@ double phonon_pumping::eigenvalue_equation(const MaterialParameters& material,
     return sin(phi) * cos(xi) + impedance_ratio * cos(phi) * sin(xi);
 }
 
-void phonon_pumping::find_acoustic_eigenfrequencies(const MaterialParameters& material, const Geometry& geometry, list_of_frequencies& frequencies_to_draw) {
-    if (geometry.should_draw_frequencies[enhance_mechanism::EIGENMODE_TA]) {
+void phonon_pumping::find_acoustic_eigenfrequencies(const MaterialParameters& material, 
+                                                    const Geometry& geometry, 
+                                                    const bool need_TA, 
+                                                    const bool need_LA, 
+                                                    list_of_frequencies& frequencies_to_draw) {
+    if (need_TA) {
         std::cout << "\nSearching for TA mode eigenfrequencies..." << std::endl;
         append_eigenfrequencies(material, geometry, enhance_mechanism::EIGENMODE_TA, frequencies_to_draw);
     }
-    if (geometry.should_draw_frequencies[enhance_mechanism::EIGENMODE_LA]) {
+    if (need_LA) {
         std::cout << "\nSearching for LA mode eigenfrequencies..." << std::endl;
         append_eigenfrequencies(material, geometry, enhance_mechanism::EIGENMODE_LA, frequencies_to_draw);
     }
@@ -126,10 +130,10 @@ void phonon_pumping::append_eigenfrequencies(const MaterialParameters& material,
     }
 }
 
-std::vector<double> phonon_pumping::extract_LA_frequencies(const list_of_frequencies& frequencies) {
-    std::vector<double> LA_frequencies;
-    for (auto& [key, freq] : frequencies[enhance_mechanism::EIGENMODE_LA]) {
-        LA_frequencies.push_back(freq);
+std::vector<double> phonon_pumping::extract_mode_frequencies(const enhance_mechanism mode, const list_of_frequencies& frequencies) {
+    std::vector<double> mode_frequencies;
+    for (auto& [key, freq] : frequencies[mode]) {
+        mode_frequencies.push_back(freq);
     };
-    return LA_frequencies;
+    return mode_frequencies;
 };

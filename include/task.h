@@ -6,16 +6,19 @@
 
 #pragma once
 
+#include "constants.h"
+
 namespace phonon_pumping {
 
     namespace task {
         enum class TaskID {
             PLOT_FMR_SPECTRUM,
-            FIT_SOUND_VELOCITIES
+            FIT_TA_SOUND_VELOCITIES,
+            FIT_LA_SOUND_VELOCITIES
         };
 
         std::vector<TaskID> load(const std::filesystem::path& filepath);
-        std::vector<double> extract_freqs(const std::filesystem::path& filepath);
+        std::vector<double> extract_freqs(const std::filesystem::path& filepath, const enhance_mechanism mode);
     }
 
 }
