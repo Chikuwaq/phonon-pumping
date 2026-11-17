@@ -100,14 +100,12 @@ void phonon_pumping::append_eigenfrequencies(const MaterialParameters& material,
                                              const enhance_mechanism i_mechanism, 
                                              list_of_frequencies& frequencies_to_draw) {
     // identify appropriate output label and eigenvalue equation
-    std::string label;
+    std::string label = get_mode_label(i_mechanism);
     std::function<double(double)> lhs;
     if (i_mechanism == enhance_mechanism::EIGENMODE_TA) {
-        label = "TA";
         lhs = [material, geometry](double freq_GHz) { return eigenvalue_equation(material, geometry, true, freq_GHz); };
     }
     else if (i_mechanism == enhance_mechanism::EIGENMODE_LA) {
-        label = "LA";
         lhs = [material, geometry](double freq_GHz) { return eigenvalue_equation(material, geometry, false, freq_GHz); };
     }
     else {

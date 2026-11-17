@@ -36,9 +36,7 @@ std::vector<TaskID> phonon_pumping::task::load(const std::filesystem::path& file
 }
 
 std::vector<double> phonon_pumping::task::extract_freqs(const std::filesystem::path& filepath, const enhance_mechanism mode) {
-    std::string mode_label;
-    if (mode == enhance_mechanism::EIGENMODE_TA) mode_label = "TA";
-    else if (mode ==enhance_mechanism::EIGENMODE_LA) mode_label = "LA";
+    std::string mode_label = get_mode_label(mode);
 
     constexpr u_int16_t max_num_frequencies = 10;
 

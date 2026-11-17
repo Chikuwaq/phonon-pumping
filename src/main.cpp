@@ -45,6 +45,13 @@ void plot_FMR_spectrum(const MaterialParameters& material, const Geometry& geome
 void fit_sound_velocities(const MaterialParameters& material, const Geometry& geometry, const std::vector<double>& target_freqs, const enhance_mechanism mode) {
     const bool need_TA = (mode == enhance_mechanism::EIGENMODE_TA);
     const bool need_LA = (mode == enhance_mechanism::EIGENMODE_LA);
+    const std::string mode_label = get_mode_label(mode);
+
+    // copy data not to damage the original
+    MaterialParameters materialTemp = material;
+    double& sound_velocity_magnet = need_TA ? materialTemp.mag_ct_ms : materialTemp.mag_cl_ms;
+    double& sound_velocity_nonmagnet = need_TA ? materialTemp.nonmag_ct_ms : materialTemp.nonmag_cl_ms;
+
     const double min_sound_velocity = need_TA ? material.min_transverse_sound_velocity_ms : material.min_longitudinal_sound_velocity_ms;
     const double max_sound_velocity = need_TA ? material.max_transverse_sound_velocity_ms : material.max_longitudinal_sound_velocity_ms;
 
@@ -54,12 +61,6 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
         throw std::runtime_error("The range [min_sound_velocity, max_sound_velocity] must be a multiple of " + std::to_string(delta_sound_velocities));
     }
     const size_t n_sound_velocities = static_cast<size_t>(floor((max_sound_velocity - min_sound_velocity) / delta_sound_velocities));
-
-    // copy data not to damage the original
-    MaterialParameters materialTemp = material;
-    double& sound_velocity_magnet = need_TA ? materialTemp.mag_ct_ms : materialTemp.mag_cl_ms;
-    double& sound_velocity_nonmagnet = need_TA ? materialTemp.nonmag_ct_ms : materialTemp.nonmag_cl_ms;
-
 
     Vector<double> sound_velocities_magnet; 
     sound_velocities_magnet.linspace(min_sound_velocity, max_sound_velocity, n_sound_velocities);

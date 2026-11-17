@@ -80,7 +80,6 @@ class Matrix2D {
                     irow_min = irow;
                     icol_min = icol;
                 }
-                value = std::min(value, element);
             }
         }
         return std::tuple<size_t, size_t, T>(irow_min, icol_min, value);

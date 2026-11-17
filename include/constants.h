@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <array>
+#include <string>
 
 namespace constants {
     constexpr double PI = 3.141592653589;
@@ -28,6 +29,8 @@ namespace phonon_pumping {
         EIGENMODE_LA,
         NUM_ELEMENTS
     };
+
+    std::string get_mode_label(const enhance_mechanism mechanism);
 
 };
 

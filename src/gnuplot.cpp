@@ -120,7 +120,9 @@ void phonon_pumping::write_gnuplot_command_draw_frequency_line(const MaterialPar
     }
 }
 
-double phonon_pumping::screen_position_x(const Geometry& geometry, 
-                                         const double position_with_respect_to_screen) {
+double phonon_pumping::screen_position_x(
+    const Geometry& geometry, 
+    const double position_with_respect_to_screen
+) {
     return (1.0 - position_with_respect_to_screen) * geometry.min_B_Tesla + position_with_respect_to_screen * geometry.max_B_Tesla;
 }
