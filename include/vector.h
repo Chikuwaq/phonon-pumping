@@ -8,9 +8,13 @@
 
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 template<class T>
 class Vector {
+    public:
+    using const_iterator = const T*;
+
     private:
     std::vector<T> data_;
 
@@ -25,6 +29,14 @@ class Vector {
     Vector(Vector<T>&& other) {
         data_ = std::move(other.data_);
     }
+
+    const_iterator begin() const { 
+		return data_.data(); 
+	}
+	
+	const_iterator end() const { 
+		return data_.data() + size(); 
+	}
 
     // fill the vector by equidistant values in the range [min, max)
     void linspace(const T min, const T max, const size_t nElements) {
@@ -57,6 +69,10 @@ class Vector {
     const T& operator()(const size_t i) const {
         return data_[i];
     };
+
+    const std::vector<T>& data() const {
+        return data_;
+    }
 
     size_t size() const {
         return data_.size();

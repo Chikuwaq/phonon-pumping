@@ -4,37 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <cassert>
-
 #include "gnuplot.h"
-
-
-void phonon_pumping::output_spectrum(const Vector<double>& x_values, 
-                                     const Vector<double>& y_values, 
-                                     const Matrix2D<double>& z_values) {
-    std::cout << "\nWriting spectrum data to file..." << std::endl;
-
-    std::ofstream file(spectrum_datafile_name);
-    if (!file.is_open()) {
-        throw std::runtime_error("Could not open output file!");
-    }
-    assert(x_values.size() == z_values.nRow() && "Number of data points along x-axis does not match");
-    assert(y_values.size() == z_values.nCol() && "Number of data points along y-axis does not match");
-    
-    for (size_t i_x = 0; i_x < x_values.size(); i_x++) {
-        const double x = x_values(i_x);
-        for (size_t i_y = 0; i_y < y_values.size(); i_y++) {
-            const double y = y_values(i_y);
-            file << std::setw(7) << x;
-            file << std::setw(7) << y;
-            file << std::setw(14) << z_values(i_x, i_y);
-            file << std::endl;
-        }
-        file << std::endl; // gnuplot requires a blank line after every change in the x coordinate
-
-    }
-    file.close();
-}
 
 void phonon_pumping::write_gnuplot_script(const MaterialParameters& material, 
                                           const Geometry& geometry, 
@@ -125,4 +95,61 @@ double phonon_pumping::screen_position_x(
     const double position_with_respect_to_screen
 ) {
     return (1.0 - position_with_respect_to_screen) * geometry.min_B_Tesla + position_with_respect_to_screen * geometry.max_B_Tesla;
+}
+
+// The data file uses gnuplot's "matrix nonuniform" layout:
+//           x_0       x_1      ... x_{nRow-1}
+//   y_0     M[0][0]   M[1][0]  ... M[nRow-1][0]
+//   y_1     M[0][1]   M[1][1]  ... M[nRow-1][1]
+void phonon_pumping::write_heatmap_xy(
+    const std::vector<std::vector<double>>& data,
+    const std::vector<double>& x, 
+    const std::vector<double>& y,
+    const std::string& x_label,
+    const std::string& y_label,
+    const std::string& cb_label,
+    const std::string& data_file,
+    const std::string& script_file,
+    const std::string& image_file
+) {
+    const size_t nCol = data[0].size(); // = number of y values
+    const size_t nRow = data.size(); // = number of x values
+
+    // ---- data file ----
+    std::ofstream dat(data_file);
+    if (!dat) throw std::runtime_error("Cannot open file for writing: " + data_file);
+
+    dat << std::scientific
+        << std::setprecision(std::numeric_limits<double>::max_digits10);
+
+    dat << "Result";
+    for (const double x_value : x) {
+        dat << " " << x_value;
+    }
+    dat << "\n";
+
+    for (size_t i_y = 0; i_y < nCol; i_y++) {
+        dat << y[i_y];
+        for (size_t i_x = 0; i_x < nRow; i_x++) {
+            dat << " " << data[i_x][i_y];
+        }
+        dat << "\n";
+    }
+    dat.close();
+    if (!dat) throw std::runtime_error("Failed to write file: " + data_file);
+
+    // ---- gnuplot script ----
+    std::ofstream gp(script_file);
+    if (!gp) throw std::runtime_error("Cannot open file for writing: " + script_file);
+
+    gp << "set terminal pngcairo size 800,700\n"
+        << "set output '" << image_file << "'\n"
+        << "set xlabel '" << x_label << "'\n"
+        << "set ylabel '" << y_label << "'\n"
+        << "set cblabel '" << cb_label << "'\n"
+        << gnuplot_palette_cividis()
+        << "set autoscale fix\n"
+        << "plot '" << data_file << "' nonuniform matrix using 1:2:3 with image notitle\n";
+    gp.close();
+    if (!gp) throw std::runtime_error("Failed to write file: " + script_file);
 }

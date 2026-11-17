@@ -35,7 +35,7 @@ void plot_FMR_spectrum(const MaterialParameters& material, const Geometry& geome
     // --- compute FMR absorption spectrum
     Matrix2D<double> FMR_power_absorption; 
     calculate_spectrum(material, geometry, FMR_power_absorption);
-    output_spectrum(geometry.B_Tesla, geometry.freq_GHz, FMR_power_absorption);
+    FMR_power_absorption.output_spectrum(geometry.B_Tesla, geometry.freq_GHz, spectrum_datafile_name);
 
     write_gnuplot_script(material, geometry, frequencies_to_draw);
     std::cout << std::endl;
@@ -87,6 +87,7 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
                 if (should_find_next_freq)
                     throw std::runtime_error("Number of eigenfrequencies found is smaller than the number of target frequencies! Please consider increasing 'max_freq_GHz' in the geometry file.");
             }
+
             const uint16_t n_freqs = std::min(target_freqs.size(), mode_frequencies.size());
             double sum = 0.0;
             for (uint16_t i_freq = 0; i_freq < n_freqs; i_freq++) {
@@ -98,6 +99,7 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
         }
     }
 
+    // report results
     auto [irow, icol, min_value] = deviations.min();
     std::cout << "Fitting results ";
     if (need_TA) std::cout << "TA modes:" << std::endl;
@@ -106,6 +108,18 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
     std::cout << "\tSound velocity of magnet = " << sound_velocities_magnet(irow) << std::endl;
     std::cout << "\tSound velocity of nonmagnet = " << sound_velocities_nonmagnet(icol) << std::endl;
     std::cout << "\tsqrt(Sum of squared frequency deviation) = " << min_value << std::endl;
+
+    // write deviations to file
+    deviations.write_gnuplot_xy(
+        sound_velocities_magnet,
+        sound_velocities_nonmagnet,
+        "Magnet sound velocity", 
+        "Nonmagnet sound velocity", 
+        "sqrt(sum of frequency deviations) (GHz)",
+        "fitting_result_" + mode_label + "_sound_velocity.dat", 
+        "plot_" + mode_label + "_fitting_deviations.plt", 
+        mode_label + "_fitting_deviations.png"
+    );
 }
 
 
