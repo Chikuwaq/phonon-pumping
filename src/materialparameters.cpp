@@ -36,4 +36,13 @@ void phonon_pumping::MaterialParameters::set(const std::filesystem::path& filepa
 
 	b1_Jm3 = result["b1_Jm3"];
 	b2_Jm3 = result["b2_Jm3"];
+
+	validate_values();
 };
+
+void phonon_pumping::MaterialParameters::validate_values() const {
+	if (min_transverse_sound_velocity_ms >= max_transverse_sound_velocity_ms)
+		throw std::runtime_error("'min_transverse_sound_velocity_ms' must be smaller than 'max_transverse_sound_velocity_ms'");
+	if (min_longitudinal_sound_velocity_ms >= max_longitudinal_sound_velocity_ms)
+		throw std::runtime_error("'min_longitudinal_sound_velocity_ms' must be smaller than 'max_longitudinal_sound_velocity_ms'");
+}

@@ -102,6 +102,9 @@ namespace phonon_pumping {
             if (mode == 0) throw std::runtime_error("Mode index must be positive!");
             return constants::SCALE_TO_GIGA * mag_ct_ms * (2. * mode - 1.) / 4. / mag_thickness_m;
         }
+
+        private:
+        void validate_values() const;
     };
 
 }
