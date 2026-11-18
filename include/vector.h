@@ -30,6 +30,14 @@ class Vector {
         data_ = std::move(other.data_);
     }
 
+    Vector<T>& operator=(const Vector<T>& other) {
+        data_ = other.data_;
+    }
+
+    Vector<T>& operator=(Vector<T>&& other) {
+        data_ = std::move(other.data_);
+    }
+
     const_iterator begin() const { 
 		return data_.data(); 
 	}
