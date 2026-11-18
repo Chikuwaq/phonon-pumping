@@ -6,8 +6,11 @@
 
 #pragma once
 
+#include <string>
+
 #include "materialparameters.h"
 #include "geometry.h"
+#include "matrix.h"
 
 namespace phonon_pumping {
 
@@ -18,4 +21,36 @@ namespace phonon_pumping {
     std::string compose_eigenmode_label(const std::string& label, uint16_t i_eigenmode);
     void append_eigenfrequencies(const MaterialParameters& material, const Geometry& geometry, const enhance_mechanism i_mechanism, list_of_frequencies& frequencies_to_draw);
     std::vector<double> extract_mode_frequencies(const enhance_mechanism mode, const list_of_frequencies& frequencies);
+
+    class AcousticFrequencyTable {
+
+        public:
+        static constexpr size_t n_row_before_data = 1; // first row contain column titles
+        static constexpr size_t n_col_before_frequencies = 2; // first two rows are for layer thicknesses
+
+        public:
+        bool load(const Matrix2D<std::string>& datatable);
+        size_t n_structure() const;
+        bool has_mode(const enhance_mechanism i_mechanism) const;
+
+        auto begin() const {
+            return table_.begin();
+        }
+
+        auto end() const {
+            return table_.end();
+        }
+        
+        private:
+        std::vector<std::pair<Bilayer, list_of_frequencies>> table_;
+
+        void expect_allocated() const {
+            if (table_.empty()) throw std::runtime_error("AcousticFrequencyTable is not allocated yet!");
+        };
+
+        void expect_not_allocated() const {
+            if (!table_.empty()) throw std::runtime_error("AcousticFrequencyTable is already allocated!");
+        };
+        
+    };
 }

@@ -139,3 +139,52 @@ std::vector<double> phonon_pumping::extract_mode_frequencies(const enhance_mecha
     };
     return mode_frequencies;
 };
+
+bool phonon_pumping::AcousticFrequencyTable::load(const Matrix2D<std::string>& datatable) {
+    expect_not_allocated();
+
+    for (size_t i_row = n_row_before_data; i_row < datatable.nRow(); i_row++) {
+        const double d = std::atof(datatable(i_row, 0).c_str());
+        const double L = std::atof(datatable(i_row, 1).c_str());
+        
+        list_of_frequencies frequencies;
+        std::array<uint16_t, 2> i_eigenmode{0u, 0u};
+        for (size_t i_col = n_col_before_frequencies; i_col < datatable.nCol(); i_col++) {
+            const double eigenfrequency_GHz = std::atof(datatable(i_row, i_col).c_str());
+            if (eigenfrequency_GHz == 0.0) continue;
+
+            const std::string& column_title = datatable(0, i_col);
+
+            enhance_mechanism i_mechanism;
+            if (column_title.find("TA") != std::string::npos) {
+                i_mechanism = enhance_mechanism::EIGENMODE_TA;
+                i_eigenmode[0]++;
+            }
+            else if (column_title.find("LA") != std::string::npos) {
+                i_mechanism = enhance_mechanism::EIGENMODE_LA;
+                i_eigenmode[1]++;
+            }
+            else throw std::runtime_error("Unknown column title " + column_title + " encountered!");
+
+            std::string label = get_mode_label(i_mechanism);
+
+            frequencies[i_mechanism].emplace_back(compose_eigenmode_label(label, i_eigenmode[i_mechanism - 3]), eigenfrequency_GHz); // TODO: index currently vulnerable to the change in `enhance_mechanism`
+        }
+        
+        table_.emplace_back(Bilayer(d, L), frequencies);
+    }
+    return true;
+}
+
+size_t phonon_pumping::AcousticFrequencyTable::n_structure() const {
+    return table_.size();
+}
+
+bool phonon_pumping::AcousticFrequencyTable::has_mode(const enhance_mechanism i_mechanism) const {
+    expect_allocated();
+    for (const auto& [bilayer, list_freq] : table_) {
+        if (list_freq[i_mechanism].empty()) continue;
+        return true;
+    };
+    return false;
+};

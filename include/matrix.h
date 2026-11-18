@@ -25,16 +25,18 @@ class Matrix2D {
     private:
     std::vector<std::vector<T>> data_;
 
-    void check_allocated() const {
-        if (data_.size() == 0u) {
-            throw std::runtime_error("Matrix is not allocated yet!");
+    void expect_allocated() const {
+        if (data_.empty()) throw std::runtime_error("Matrix is not allocated yet!");
+        
+        for (auto& row : data_) {
+            if (!row.empty()) return;
         }
+
+        throw std::runtime_error("Matrix is not allocated yet!");
     };
 
-    void check_not_allocated() const {
-        if (data_.size() != 0u) {
-            throw std::runtime_error("Matrix is already allocated!");
-        }
+    void expect_not_allocated() const {
+        if (!data_.empty()) throw std::runtime_error("Matrix is already allocated!");
     };
 
     public:
@@ -43,7 +45,7 @@ class Matrix2D {
 
     // fill the vector by zeros
     void zeros(const size_t n0, const size_t n1) {
-        check_not_allocated();
+        expect_not_allocated();
 
         data_.resize(n0);
         for (auto& subspace : data_) {
@@ -52,22 +54,22 @@ class Matrix2D {
     }
 
     T& operator()(const size_t i, const size_t j) {
-        check_allocated();
+        expect_allocated();
         return data_[i][j];
     };
 
     const T& operator()(const size_t i, const size_t j) const {
-        check_allocated();
+        expect_allocated();
         return data_[i][j];
     };
 
     size_t nRow() const {
-        check_allocated();
+        expect_allocated();
         return data_.size();
     };
 
     size_t nCol() const {
-        check_allocated();
+        expect_allocated();
         return data_[0].size();
     };
 
@@ -139,7 +141,7 @@ class Matrix2D {
                           const std::string& data_file,
                           const std::string& script_file,
                           const std::string& image_file) const {
-        check_allocated();
+        expect_allocated();
         if (x.size() != nCol()) throw std::invalid_argument("x.size() must be equal to nCol()");
         if (y.size() != nRow()) throw std::invalid_argument("y.size() must be equal to nRow()");
 
@@ -153,13 +155,13 @@ class Matrix3D {
     private:
     std::vector<std::vector<std::vector<T>>> data_;
 
-    void check_allocated() const {
+    void expect_allocated() const {
         if (data_.size() == 0u) {
             throw std::runtime_error("Matrix is not allocated yet!");
         }
     };
 
-    void check_not_allocated() const {
+    void expect_not_allocated() const {
         if (data_.size() != 0u) {
             throw std::runtime_error("Matrix is already allocated!");
         }
@@ -171,7 +173,7 @@ class Matrix3D {
 
     // fill the vector by zeros
     void zeros(const size_t n0, const size_t n1, const size_t n2) {
-        check_not_allocated();
+        expect_not_allocated();
 
         data_.resize(n0);
         for (auto& subspace : data_) {
@@ -183,12 +185,12 @@ class Matrix3D {
     }
 
     T& operator()(const size_t i, const size_t j, const size_t k) {
-        check_allocated();
+        expect_allocated();
         return data_[i][j][k];
     };
 
     const T& operator()(const size_t i, const size_t j, const size_t k) const {
-        check_allocated();
+        expect_allocated();
         return data_[i][j][k];
     };
 };
