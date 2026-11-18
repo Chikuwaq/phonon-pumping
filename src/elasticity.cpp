@@ -95,6 +95,10 @@ void phonon_pumping::find_acoustic_eigenfrequencies(const MaterialParameters& ma
     printFreqs(frequencies_to_draw);
 }
 
+std::string phonon_pumping::compose_eigenmode_label(const std::string& label, uint16_t i_eigenmode) {
+    return label + " " + std::to_string(i_eigenmode);
+}
+
 void phonon_pumping::append_eigenfrequencies(const MaterialParameters& material, 
                                              const Geometry& geometry, 
                                              const enhance_mechanism i_mechanism, 
@@ -124,7 +128,7 @@ void phonon_pumping::append_eigenfrequencies(const MaterialParameters& material,
         if (freq_GHz < geometry.freq_GHz(0)) continue; // do not draw eigenfrequencies out of plot range
 
         const double eigenfrequency_GHz = numerics::secant_method(lhs, freq0, freq1);
-        frequencies_to_draw[i_mechanism].emplace_back(label + " " + std::to_string(i_eigenmode), eigenfrequency_GHz);
+        frequencies_to_draw[i_mechanism].emplace_back(compose_eigenmode_label(label, i_eigenmode), eigenfrequency_GHz);
     }
 }
 

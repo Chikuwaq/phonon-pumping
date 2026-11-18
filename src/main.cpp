@@ -42,10 +42,15 @@ void plot_FMR_spectrum(const MaterialParameters& material, const Geometry& geome
     std::cout << "Run the gnuplot script " << gnuplot_file_name << " to generate figures." << std::endl;
 }
 
-void fit_sound_velocities(const MaterialParameters& material, const Geometry& geometry, const std::vector<double>& target_freqs, const enhance_mechanism mode) {
-    const bool need_TA = (mode == enhance_mechanism::EIGENMODE_TA);
-    const bool need_LA = (mode == enhance_mechanism::EIGENMODE_LA);
-    const std::string mode_label = get_mode_label(mode);
+void fit_sound_velocities(
+    const MaterialParameters& material, 
+    const Geometry& geometry, 
+    const std::vector<double>& target_freqs, 
+    const enhance_mechanism i_mechanism
+) {
+    const bool need_TA = (i_mechanism == enhance_mechanism::EIGENMODE_TA);
+    const bool need_LA = (i_mechanism == enhance_mechanism::EIGENMODE_LA);
+    const std::string mode_label = get_mode_label(i_mechanism);
 
     // copy data not to damage the original
     MaterialParameters materialTemp = material;
@@ -79,7 +84,7 @@ void fit_sound_velocities(const MaterialParameters& material, const Geometry& ge
             list_of_frequencies eigenfrequencies;
             find_acoustic_eigenfrequencies(materialTemp, geometry, need_TA, need_LA, eigenfrequencies);
 
-            std::vector<double> mode_frequencies = extract_mode_frequencies(mode, eigenfrequencies);
+            std::vector<double> mode_frequencies = extract_mode_frequencies(i_mechanism, eigenfrequencies);
             if (mode_frequencies.size() < target_freqs.size()) {
                 const double highest_freq_found = mode_frequencies[mode_frequencies.size() - 1];
                 const double highest_freq_target = target_freqs[target_freqs.size() - 1];
