@@ -24,14 +24,6 @@ std::vector<TaskID> phonon_pumping::task::load(const std::filesystem::path& file
         result.push_back(TaskID::PLOT_FMR_SPECTRUM);
     }
 
-    if (parsed_input.find("target_TA1_GHz") != parsed_input.end() && parsed_input["target_TA1_GHz"] > 0) {
-        result.push_back(TaskID::FIT_TA_SOUND_VELOCITIES);
-    }
-
-    if (parsed_input.find("target_LA1_GHz") != parsed_input.end() && parsed_input["target_LA1_GHz"] > 0) {
-        result.push_back(TaskID::FIT_LA_SOUND_VELOCITIES);
-    }
-
     return result;
 }
 
