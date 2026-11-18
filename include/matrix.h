@@ -47,10 +47,7 @@ class Matrix2D {
 
         data_.resize(n0);
         for (auto& subspace : data_) {
-            subspace.resize(n1);
-            for (T& element : subspace) {
-                element = static_cast<T>(0);
-            }
+            subspace.resize(n1); // newly added elements are value-initialized
         }
     }
 
@@ -180,10 +177,7 @@ class Matrix3D {
         for (auto& subspace : data_) {
             subspace.resize(n1);
             for (auto& subsubspace : subspace) {
-                subsubspace.resize(n2);
-                for (T& element : subsubspace) {
-                    element = static_cast<T>(0);
-                }
+                subsubspace.resize(n2); // newly added elements are value-initialized
             }
         }
     }

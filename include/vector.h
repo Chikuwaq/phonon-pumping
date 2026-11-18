@@ -56,10 +56,7 @@ class Vector {
             throw std::runtime_error("Vector is already allocated!");
         }
 
-        data_.resize(nElements);
-        for (T& element : data_) {
-            element = static_cast<T>(0);
-        }
+        data_.resize(nElements); // newly added elements are value-initialized
     }
 
     T& operator()(const size_t i) {
