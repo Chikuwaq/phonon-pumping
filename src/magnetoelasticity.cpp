@@ -20,13 +20,13 @@ void phonon_pumping::calculate_spectrum(const MaterialParameters& material, cons
     Vector<double> xi; xi.zeros(geometry.n_freq);
     for (size_t i_freq = 0; i_freq < geometry.n_freq; i_freq++) {
         omega_Hz(i_freq) = 2. * constants::PI * geometry.freq_GHz(i_freq) / constants::SCALE_TO_GIGA;
-        phi(i_freq) = omega_Hz(i_freq) * (geometry.mag_thickness_nm / constants::SCALE_TO_NANO) / material.mag_ct_ms; // dimensionless
-        xi(i_freq) = omega_Hz(i_freq) * (geometry.nonmag_thickness_nm / constants::SCALE_TO_NANO) / material.nonmag_ct_ms; // dimensionless
+        phi(i_freq) = omega_Hz(i_freq) * (geometry.bilayer.mag_thickness_nm / constants::SCALE_TO_NANO) / material.mag_ct_ms; // dimensionless
+        xi(i_freq) = omega_Hz(i_freq) * (geometry.bilayer.nonmag_thickness_nm / constants::SCALE_TO_NANO) / material.nonmag_ct_ms; // dimensionless
     }
 
     const double impedance_ratio_t = material.nonmag_rho_kgm3 * material.nonmag_ct_ms / material.mag_rho_kgm3 / material.mag_ct_ms;
-    const double mag_thickness_m = geometry.mag_thickness_nm / constants::SCALE_TO_NANO;
-    const double nonmag_thickness_m = geometry.nonmag_thickness_nm / constants::SCALE_TO_NANO;
+    const double mag_thickness_m = geometry.bilayer.mag_thickness_nm / constants::SCALE_TO_NANO;
+    const double nonmag_thickness_m = geometry.bilayer.nonmag_thickness_nm / constants::SCALE_TO_NANO;
     const double mag_damped_phase = material.mag_kappat() * mag_thickness_m;
     const double nonmag_damped_phase = material.nonmag_kappat() * nonmag_thickness_m;
 

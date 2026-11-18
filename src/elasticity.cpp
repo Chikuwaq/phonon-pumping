@@ -13,7 +13,7 @@ void phonon_pumping::calculate_Gilbert_damping_enhancing_freq(const MaterialPara
         std::cout << "\nSearching for frequencies at which the TA mode profile (Neumann boundary condition on both sides) is in phase with the interface magnetoelastic stress ..." << std::endl;
         bool first_appearance = true;
         for (uint16_t i = 1; i <= std::numeric_limits<uint16_t>::max(); i++) {
-            const double resonance_freq_GHz = material.stress_matching_freq_TA_both_Neumann_GHz(geometry.mag_thickness_nm / constants::SCALE_TO_NANO, i);
+            const double resonance_freq_GHz = material.stress_matching_freq_TA_both_Neumann_GHz(geometry.bilayer.mag_thickness_nm / constants::SCALE_TO_NANO, i);
             if (resonance_freq_GHz < geometry.min_freq_GHz) continue;
             if (geometry.max_freq_GHz < resonance_freq_GHz) break;
 
@@ -30,7 +30,7 @@ void phonon_pumping::calculate_Gilbert_damping_enhancing_freq(const MaterialPara
         std::cout << "Searching for frequencies at which the LA mode profile (Neumann boundary condition on both sides) is in phase with the interface magnetoelastic stress ..." << std::endl;
         bool first_appearance = true;
         for (uint16_t i = 1; i <= std::numeric_limits<uint16_t>::max(); i++) {
-            const double resonance_freq_GHz = material.stress_matching_freq_LA_both_Neumann_GHz(geometry.mag_thickness_nm / constants::SCALE_TO_NANO, i);
+            const double resonance_freq_GHz = material.stress_matching_freq_LA_both_Neumann_GHz(geometry.bilayer.mag_thickness_nm / constants::SCALE_TO_NANO, i);
             if (resonance_freq_GHz < geometry.min_freq_GHz) continue;
             if (geometry.max_freq_GHz < resonance_freq_GHz) break;
 
@@ -47,7 +47,7 @@ void phonon_pumping::calculate_Gilbert_damping_enhancing_freq(const MaterialPara
         std::cout << "Searching for frequencies at which the TA mode profile (Dirichlet and Neumann boundary conditions on each side) is in phase with the interface magnetoelastic stress ..." << std::endl;
         bool first_appearance = true;
         for (uint16_t i = 1; i <= std::numeric_limits<uint16_t>::max(); i++) {
-            const double resonance_freq_GHz = material.stress_matching_freq_TA_Dirichlet_Neumann_GHz(geometry.mag_thickness_nm / constants::SCALE_TO_NANO, i);
+            const double resonance_freq_GHz = material.stress_matching_freq_TA_Dirichlet_Neumann_GHz(geometry.bilayer.mag_thickness_nm / constants::SCALE_TO_NANO, i);
             if (resonance_freq_GHz < geometry.min_freq_GHz) continue;
             if (geometry.max_freq_GHz < resonance_freq_GHz) break;
 
@@ -72,8 +72,8 @@ double phonon_pumping::eigenvalue_equation(const MaterialParameters& material,
 
     const double impedance_ratio = material.nonmag_rho_kgm3 * nonmag_sound_velocity / (material.mag_rho_kgm3 * mag_sound_velocity);
     const double omega_Hz = 2. * constants::PI * freq_GHz / constants::SCALE_TO_GIGA;
-    const double phi = omega_Hz * (geometry.mag_thickness_nm / constants::SCALE_TO_NANO) / mag_sound_velocity; // dimensionless
-    const double xi = omega_Hz * (geometry.nonmag_thickness_nm / constants::SCALE_TO_NANO) / nonmag_sound_velocity; // dimensionless
+    const double phi = omega_Hz * (geometry.bilayer.mag_thickness_nm / constants::SCALE_TO_NANO) / mag_sound_velocity; // dimensionless
+    const double xi = omega_Hz * (geometry.bilayer.nonmag_thickness_nm / constants::SCALE_TO_NANO) / nonmag_sound_velocity; // dimensionless
     return sin(phi) * cos(xi) + impedance_ratio * cos(phi) * sin(xi);
 }
 

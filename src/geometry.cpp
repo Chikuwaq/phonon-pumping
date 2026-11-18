@@ -32,8 +32,8 @@ void phonon_pumping::Geometry::load(const std::filesystem::path& filepath) {
 		std::cout << key << " = " << value << std::endl;
 	}
 
-	mag_thickness_nm = parsed_input["mag_thickness_nm"];
-	nonmag_thickness_nm = parsed_input["nonmag_thickness_nm"];
+	bilayer.mag_thickness_nm = parsed_input["mag_thickness_nm"];
+	bilayer.nonmag_thickness_nm = parsed_input["nonmag_thickness_nm"];
 	magnetization_angle_radian = 2.0 * constants::PI * parsed_input["magnetization_angle_per_2pi"];
 
 	h_static = parsed_input["h_static"];

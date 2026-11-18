@@ -22,7 +22,7 @@ void phonon_pumping::write_gnuplot_script(const MaterialParameters& material,
     file << "set term pdfcairo enhanced color font 'sans,18' size 5in,3in" << std::endl;
     #endif
 
-    file << "set output 'FMR_MagThickness" << geometry.mag_thickness_nm << "_NonmagThickness" << geometry.nonmag_thickness_nm << ".pdf' " << std::endl;
+    file << "set output 'FMR_MagThickness" << geometry.bilayer.mag_thickness_nm << "_NonmagThickness" << geometry.bilayer.nonmag_thickness_nm << ".pdf' " << std::endl;
     file << "set lmargin screen 0.20" << std::endl;
     file << "set rmargin screen 0.80" << std::endl;
 
@@ -30,7 +30,7 @@ void phonon_pumping::write_gnuplot_script(const MaterialParameters& material,
     file << "set palette defined ( 0 '#000090',1 '#000fff',2 '#0090ff',3 '#0fffee',4 '#90ff70',5 '#ffee00',6 '#ff7000',7 '#ee0000',8 '#7f0000') # define color gradation. Relative to cbrange" << std::endl;
 
     file << std::endl;
-    file << "set title 'FMR power absorption: Magnet/Nonmagnet " << geometry.mag_thickness_nm << "/" << geometry.nonmag_thickness_nm << " nm'" << std::endl;
+    file << "set title 'FMR power absorption: Magnet/Nonmagnet " << geometry.bilayer.mag_thickness_nm << "/" << geometry.bilayer.nonmag_thickness_nm << " nm'" << std::endl;
 
     file << "set xlabel 'Out-of-plane magnetic field [T]'" << std::endl;
     file << "set ylabel 'Frequency [GHz]'" << std::endl;

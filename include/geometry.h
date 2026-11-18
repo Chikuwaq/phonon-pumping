@@ -16,14 +16,23 @@
 
 namespace phonon_pumping {
 
+    struct Bilayer {
+        double mag_thickness_nm;
+        double nonmag_thickness_nm;
+
+        public:
+        Bilayer(const double d, const double L) 
+        : mag_thickness_nm(d), nonmag_thickness_nm(L) {};
+
+    };
+
     struct Geometry {
         private:
         static uint16_t expect_uint(const double value);
         
         public:
         // geometry
-        double mag_thickness_nm;
-        double nonmag_thickness_nm;
+        Bilayer bilayer{0.0, 0.0};
         double magnetization_angle_radian;
 
         double h_static;
