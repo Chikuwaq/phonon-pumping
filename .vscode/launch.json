@@ -54,6 +54,7 @@
                 "-m", "~/repo/phonon-pumping/examples/Patel2026/material_parameters_Co-Pt-Patel2026.conf",
                 "-g", "~/repo/phonon-pumping/examples/Patel2026/geometry_Patel2026.conf",
                 "-t", "~/repo/phonon-pumping/examples/Patel2026/task.conf",
+                "-c", "~/repo/phonon-pumping/examples/Patel2026/target_frequencies.csv"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/bin/debug/",
